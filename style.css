@@ -1,0 +1,188 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    color: black;
+}
+
+
+
+body {
+   background-color: rgb(255, 255, 255);
+}
+
+
+form {
+    padding: 15px;
+    height: 200px;
+}
+
+
+h2 {
+    padding: 10px;
+}
+
+h3 {
+    padding: 10px;
+}
+
+
+#main_1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+svg {
+    background-color: lightgreen;
+    border-radius: 10px;
+}
+
+
+polygon {
+    fill: 	#3d1401;
+    stroke: red;
+    stroke-width: 1;
+    cursor: grab;
+    stroke-linejoin:round;
+    box-shadow: 0 2px 2px 4px green;
+}
+
+
+.sample_desk{
+    margin:10px 50px;
+    background-color:#3d1401;
+    width: 40px;
+    height: 50px;
+    cursor: grab;
+    border: black solid 1px;
+    
+}
+
+
+#sample_desk:active {
+    cursor: grab;
+}
+
+
+#desk {
+    border: solid 3px white;
+    border-radius: 25px;
+}
+
+
+.invisable {
+    visibility: hidden;
+}
+
+
+.chair {
+    background-color: rgb(146, 36, 36);
+    height: 150px;
+}
+
+
+.sample_chair {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: solid black 1px;
+    margin: 20px 40px;
+}
+
+
+.line_button {
+    all: unset;
+    opacity: 0.9;
+    background-color:rgb(41, 27, 27);
+    color: white;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    border: solid 1px black;
+    border-radius: 10px;
+    margin: 10px;
+    font-size: 1.5rem;
+    
+}
+
+
+.line_button:hover {
+    opacity: 1;
+}
+
+
+svg {
+    box-shadow: 3px 3px 3px black;
+}
+
+
+input {
+    width: 100px;
+    height: 30px;
+    margin-right: 5px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+
+label {
+    margin-right: 10px;
+}
+
+
+#create_desk {
+    all: unset;
+    text-align:center;
+    width: 60px;
+    height: 35px;
+    background-color:rgb(41, 27, 27);
+    opacity: 0.9;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.3rem;
+}
+
+
+#create_desk:hover {
+    opacity: 1;
+}
+
+.rotate {
+    height: 70px;
+    width: 40px;
+    margin: 10px;
+}
+
+.rot {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.svg2 {
+    display: flex;
+}
+
+#btn_up {
+    all: unset;
+    text-align:center;
+    width: 50px;
+    height: 50px;
+    color: white;
+    background-color:rgb(47,79,79);
+    border-radius: 5px;
+    margin: 5px;
+}
+
+#btn_up:hover{
+    cursor: pointer;
+    background-color:rgb(56, 94, 94) ;
+}
+
+#btn_up:active  {
+    background-color: rgb(74, 126, 126);
+}
+
