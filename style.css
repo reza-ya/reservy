@@ -117,9 +117,11 @@ polygon {
     height: 150px;
 }
 
+
+
 .circle-chair {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     border-radius: 100%;
     border: black solid 2px;
     background-color: yellow;
@@ -213,10 +215,14 @@ label {
     margin: 10px;
 }
 
+
+
+
 .rot {
-    margin-top: 100px;
+    color: #6e2503;
     display: flex;
     flex-direction: column;
+    margin: 5px;
 }
 
 .svg2 {
@@ -262,4 +268,13 @@ label {
         width: 400px;
         height: 400px;
     }
+}
+
+
+#Delete {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
 }

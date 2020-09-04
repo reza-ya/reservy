@@ -12,6 +12,8 @@ var btnLine = document.getElementById('line_button');
 var btnUp = document.getElementById('btn_up');
 var btnDown = document.getElementById('btn_down');
 var small = document.querySelector('.guid_drag');
+var Deletebtn = document.getElementById('Delete');
+
 
 
 // EVENT LISTENERS
@@ -22,6 +24,7 @@ sample.addEventListener('dragstart' , dragStart);
 sample.addEventListener('mousedown' , sampleGetinfo);
 btnLine.addEventListener('click' , lineSet);
 btnUp.addEventListener('click' , UP);
+Deletebtn.addEventListener('click' , Delete);
 
 
 
@@ -66,7 +69,7 @@ function checkSelectItem () {
             deskselected.style.filter="";
         }
         deskselected = document.getElementById(selectpolyid);
-        deskselected.style.fill = "brown";
+        deskselected.style.fill = "#6e2503";
         deskselected.style.filter="url(#f1)";
     }
 }
@@ -186,6 +189,17 @@ class Objects {
     
 }
 
+
+function Delete () {
+    objects.polygon.forEach(el => {
+        if(el.id == selectpolyid){
+            console.log(objects.polygon.indexOf(el))
+            objects.polygon.splice(objects.polygon.indexOf(el),1);
+        }
+    });
+    selectpolyid = null;
+    deskselected.remove();
+}
 
 
 function getcordinate() {
@@ -469,7 +483,10 @@ check.addEventListener('click' , () => {
 })
 
 
-
+test = ['reza' , 'hello' , 'salam ' , 'yekidg' , 'ballleeeee'];
+console.log(test)
+test.splice(2, 1);
+console.log(test)
 
  
 
