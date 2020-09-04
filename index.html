@@ -1,47 +1,62 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html  lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/d90d23f30f.js" crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
 <body onresize="getcordinate()">
-<aside id="sidebar">
-<form action="">
-    <h2>میزخود را بسازید</h2>
-    <h3>ظرفیت میز</h3>
-    <label for="text">حداقل:</label>
-    <input id="min" max="10" min="1" type="number" required >
-    <label for="text">حداکثر:</label>
-    <input id="max" max="10" min="1" type="number"required >
-    <button id="create_desk" type="submit" >بساز</button>
-    <div id="sample_desk" class="" draggable="true"></div>
-    
-</form>
-</aside>
+<div class="container">
 
+        <div class="row align-items-center">
+                <div class="col-4 order-12">
+                    <aside id="sidebar">
+                        <form action="">
+                            <h4>میزخود را بسازید</h4>
+                            <h5>ظرفیت میز</h5>
+                            <div class="labels">
+                                <label for="text">: حداقل</label>
+                            <input id="min" class="text-center" max="10" min="1" type="number" required >
+                            <label for="text">: حداکثر</label>
+                            <input id="max" class="text-center" max="10" min="1" type="number"required >
+                            </div>
+                            <button id="create_desk" class="btn btn-success m-2" type="submit" >بساز</button>
+                            <div id="sample_desk" class="" draggable="true"></div>
+                            
+                        </form>
+                        </aside>
+                </div>
 
-
-<main id="main_1" >
-    <button id="line_button" class="line_button" >دیوار</button>
-    <div class="svg2">
-        <svg  id="vector" width="500" height="400">
-            <defs>
-                <filter id="f1" x="0" y="0" width="200%" height="200%">
-                  <feOffset result="offOut" in="SourceAlpha" dx="10" dy="10" />
-                  <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
-                  <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                </filter>
-              </defs>
-              
-        </svg>
-        <div class="rot">
-            <button id="btn_up" class="rotate"><i class="fas fa-sync"></i></button>
+                <div class="col-8 order-2">
+                    <main id="main_1" >
+                        <button id="line_button" class="line_button btn btn-success m-2" >دیوار</button>
+                        <div class="svg2">
+                            <!-- <div class="test" draggable="true"></div> -->
+                            <svg  id="vector" width="500" height="400">
+                                <defs>
+                                    <filter id="f1" x="0" y="0" width="200%" height="200%">
+                                      <feOffset result="offOut" in="SourceAlpha" dx="10" dy="10" />
+                                      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
+                                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                                    </filter>
+                                  </defs>
+                                  
+                            </svg>
+                            <div class="rot">
+                                <button id="btn_up" class="rotate"><i class="fas fa-sync"></i></button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
         </div>
-    </div>
-</main>
+
+        <div class="row">
+            
+        </div>
+</div>
 
 <button id="check_objects">check</button>
 
