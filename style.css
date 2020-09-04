@@ -58,7 +58,8 @@ h3 {
 
 svg {
     background-color: lightgreen;
-    border-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 
@@ -87,6 +88,18 @@ polygon {
     cursor: grab;
 }
 
+.guid_drag {
+    visibility: hidden;
+    margin-top: 10px;
+}
+
+.pop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
 
 #desk {
     border: solid 3px white;
@@ -102,6 +115,14 @@ polygon {
 .chair {
     background-color: rgb(146, 36, 36);
     height: 150px;
+}
+
+.circle-chair {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: black solid 2px;
+    background-color: yellow;
 }
 
 
@@ -137,14 +158,21 @@ polygon {
 }
 
 
-svg {
-    box-shadow: 3px 3px 3px black;
-    
-}
+
 
 #vector {
    width: 500px;
    height: 450px;
+}
+
+
+.wrap_rot {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(80, 184, 80);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    align-items: center;
 }
 
 

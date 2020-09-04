@@ -11,6 +11,7 @@ var sample = document.getElementById('sample_desk');
 var btnLine = document.getElementById('line_button');
 var btnUp = document.getElementById('btn_up');
 var btnDown = document.getElementById('btn_down');
+var small = document.querySelector('.guid_drag');
 
 
 // EVENT LISTENERS
@@ -238,6 +239,7 @@ function create (ev) {
     if(max.value && min.value) {
         ev.preventDefault();
         sample.className = 'sample_desk';
+        small.style.visibility= 'visible';
         maxValue = max.value;
         minValue = min.value;
     }
@@ -405,6 +407,7 @@ function svgover (e) {
 }
 
 function dragEndsvg (e) {
+    small.style.visibility="";
     sample.ondragend = function(e)  {
         svgX = e.clientX - rectLeft;
         svgY = e.clientY - rectTop;
