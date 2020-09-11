@@ -1,4 +1,6 @@
 
+var oldobjects = null;
+oldobjects = JSON.parse(sessionStorage.getItem('objects'));
 
 
 // GET ELEMENT OF BUTTON AND INPUT
@@ -53,6 +55,7 @@ var plusrotate = null;
 var calbase;
 var deskselected;
 var cal = false;
+var lineBuild;
 
 
 
@@ -136,13 +139,14 @@ class Objects {
         this.lineid = this.lineid + 1;
         var line = document.createElementNS("http://www.w3.org/2000/svg" ,'line');
         svg.appendChild(line);
-        line.setAttribute("id" ,this.lineid);
+        line.setAttribute("id" ,"line"+this.lineid);
         line.setAttribute("x1" ,x1);
         line.setAttribute("y1" ,y1);
         line.setAttribute("x2" ,x2);
         line.setAttribute("y2" ,y2);
         line.setAttribute("style" ,"stroke:rgb(0,0,0);stroke-width:4");
         this.line.push({
+            id:"line"+this.lineid,
             x1:x1,
             y1:y1,
             x2:x2,
@@ -266,6 +270,29 @@ function create (ev) {
 objects = new Objects();
 
 
+//  SET THE INFORMATION OF OBJECT(OLDOBJECT) BEFORE LOADING IN TO THE OBJECT
+console.log(oldobjects)
+if (oldobjects) {
+    // objects.polygon = oldobjects.polygon;
+    // objects.circle = oldobjects.circle;
+    // objects.line = oldobjects.line;
+    // objects.polyid = oldobjects.polyid;
+    // objects.circleid = oldobjects.circleid;
+    // objects.lineid = oldobjects.lineid;
+// CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
+    oldobjects.polygon.forEach(el => {
+        objects.createPolygon(el.point , null , el.min , el.max , el.baserotate , el.rotate);
+        
+    })
+    // objects.createLine (5 , 5 ,100 ,100)
+    oldobjects.line.forEach(el => {
+        objects.createLine (el.x1 , el.y1 , el.x2 , el.y2);
+    })
+
+}
+
+
+
 
 
     svg.addEventListener('mousedown' , startDrag);
@@ -289,7 +316,6 @@ function forEdit () {
     //  THIS FUNCTIONS ATTACH TO THE MOUSEDOWN , MOUSEMOVE,MOUSEUP AND MOUSELEAVE EVENT 
 function startDrag(evt) {
     // DRAG POLYGON DESK !!!
-    console.log(evt.target)
     if (evt.buttons == 1 && evt.target.classList[0] == ".draggable") {
         selectElement = evt.target;
         x = evt.clientX - rectLeft;
@@ -361,7 +387,7 @@ function drag(evt) {
         evt.target.setAttribute("cx" , newx);
         evt.target.setAttribute("cy" , newy);
     }else if (Drag == true) {
-        var line = document.getElementById(objects.lineid);
+        lineBuild = document.getElementById("line"+objects.lineid);
         newx = Math.floor(evt.clientX - rectLeft);
         newy = Math.floor(evt.clientY - rectTop);
         
@@ -387,8 +413,8 @@ function drag(evt) {
                 newy = newy + 1;
                 break;
         };
-        line.setAttribute("x2" , newx);
-        line.setAttribute("y2" , newy);
+        lineBuild.setAttribute("x2" , newx);
+        lineBuild.setAttribute("y2" , newy);
     }
 
 }
@@ -407,6 +433,16 @@ function endDrag(evt) {
         selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
         selectElement = null;
+        // var lineBuildid = lineBuild.getAttribute('id');
+        // console.log(lineBuildid);
+        if (lineBuild) {
+            objects.line.forEach(el => {
+            if(el.id == lineBuild.getAttribute('id')){
+                el.x2 = newx;
+                el.y2 = newy;
+            }
+        });
+        }
         circ = false;
         Drag = false;
 }
@@ -524,6 +560,22 @@ matrixA.forEach(el => {
     }
 
 };
+
+window.onbeforeunload = () => {
+    sessionStorage.removeItem('objects');
+    sessionStorage.setItem('objects' , JSON.stringify(objects));
+    console.log('goodbye');
+}
+
+var checkbtn = document.getElementById('check_objects');
+checkbtn.onclick = () => {
+    console.log(objects)
+    console.log(JSON.parse(sessionStorage.getItem('objects')))
+}
+sessionStorage.setItem('test' , 'test');
+
+sessionStorage.removeItem('test');
+sessionStorage.setItem('test' , 'test2');
  
 
 
