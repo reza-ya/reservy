@@ -15,6 +15,7 @@ var btnUp = document.getElementById('btn_up');
 var btnDown = document.getElementById('btn_down');
 var small = document.querySelector('.guid_drag');
 var Deletebtn = document.getElementById('Delete');
+var Resetbtn = document.getElementById('reset_btn');
 
 
 
@@ -56,11 +57,19 @@ var calbase;
 var deskselected;
 var cal = false;
 var lineBuild;
+var reset = false;
 
 
-
+// GET NEW CORDINATE WHEN SCROLLING WINDOWS TO BE SURE THAT CORDINATE OF SVG WILL NOT MESS UP !!
 window.onscroll = function() {
     getcordinate();
+}
+
+
+// RELOAD PAGE WITHOUT SAVING SVG ELEMENT
+Resetbtn.onclick = () => {
+    reset = true;
+    window.location.reload();
 }
 
 
@@ -273,12 +282,6 @@ objects = new Objects();
 //  SET THE INFORMATION OF OBJECT(OLDOBJECT) BEFORE LOADING IN TO THE OBJECT
 console.log(oldobjects)
 if (oldobjects) {
-    // objects.polygon = oldobjects.polygon;
-    // objects.circle = oldobjects.circle;
-    // objects.line = oldobjects.line;
-    // objects.polyid = oldobjects.polyid;
-    // objects.circleid = oldobjects.circleid;
-    // objects.lineid = oldobjects.lineid;
 // CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
     oldobjects.polygon.forEach(el => {
         objects.createPolygon(el.point , null , el.min , el.max , el.baserotate , el.rotate);
@@ -443,6 +446,7 @@ function endDrag(evt) {
             }
         });
         }
+        lineBuild = false;
         circ = false;
         Drag = false;
 }
@@ -563,8 +567,11 @@ matrixA.forEach(el => {
 
 window.onbeforeunload = () => {
     sessionStorage.removeItem('objects');
+    if (reset == false) {
     sessionStorage.setItem('objects' , JSON.stringify(objects));
     console.log('goodbye');
+    }
+    
 }
 
 var checkbtn = document.getElementById('check_objects');
