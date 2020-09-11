@@ -286,19 +286,46 @@ function forEdit () {
 
 // SVG DRAG FUNCTIONALLITY
     // DRAG START
+    //  THIS FUNCTIONS ATTACH TO THE MOUSEDOWN , MOUSEMOVE,MOUSEUP AND MOUSELEAVE EVENT 
 function startDrag(evt) {
+    // DRAG POLYGON DESK !!!
+    console.log(evt.target)
     if (evt.buttons == 1 && evt.target.classList[0] == ".draggable") {
         selectElement = evt.target;
         x = evt.clientX - rectLeft;
         y = evt.clientY - rectTop;
         oldPoint = selectElement.getAttribute("points");
+    // DRAG CIRCLE CHAIR !!!
     }else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
         console.log(evt.target);
         circ = true;
+    // CREATE LINE AS A WALL !!!
     }else if (evt.buttons == 1 && lin == true) {
         Drag = true;
-        x = evt.clientX - rectLeft;
-        y = evt.clientY - rectTop;
+        x = Math.round(evt.clientX - rectLeft);
+        y = Math.round(evt.clientY - rectTop);
+        switch (x % 4) {
+            case 1:
+                x = x - 1;
+                break;
+            case 2:
+                x = x - 2;
+                break
+            case 3:
+                x = x + 1;
+                break;
+        }
+        switch (y % 4) {
+            case 1:
+                y = y - 1;
+                break;
+            case 2:
+                y = y - 2;
+                break
+            case 3:
+                y = y + 1;
+                break;
+        };
         objects.createLine(x , y , x ,y);
 
     }
@@ -335,8 +362,31 @@ function drag(evt) {
         evt.target.setAttribute("cy" , newy);
     }else if (Drag == true) {
         var line = document.getElementById(objects.lineid);
-        newx = evt.clientX - rectLeft;
-        newy = evt.clientY - rectTop;
+        newx = Math.floor(evt.clientX - rectLeft);
+        newy = Math.floor(evt.clientY - rectTop);
+        
+        switch (newx % 4) {
+            case 1:
+                newx = newx - 1;
+                break;
+            case 2:
+                newx = newx - 2;
+                break
+            case 3:
+                newx = newx + 1;
+                break;
+        }
+        switch (newy % 4) {
+            case 1:
+                newy = newy - 1;
+                break;
+            case 2:
+                newy = newy - 2;
+                break
+            case 3:
+                newy = newy + 1;
+                break;
+        };
         line.setAttribute("x2" , newx);
         line.setAttribute("y2" , newy);
     }
@@ -473,21 +523,7 @@ matrixA.forEach(el => {
 
     }
 
-}
-
-
-var check = document.getElementById('check_objects');
-
-check.addEventListener('click' , () => {
-    console.log(objects)
-})
-
-
-test = ['reza' , 'hello' , 'salam ' , 'yekidg' , 'ballleeeee'];
-console.log(test)
-test.splice(2, 1);
-console.log(test)
-
+};
  
 
 
