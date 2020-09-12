@@ -225,6 +225,30 @@ label {
     margin: 5px;
 }
 
+.setwidth {
+    box-sizing: content-box;
+    text-align: center;
+    border:  rgb(35, 59, 59) 2px solid;
+    background-color: rgb(47,79,79);
+    width: 50px;
+    height: 100px;
+}
+
+.width_desk , .height_desk {
+    margin: auto;
+    width: 45px;
+    height: 30px;
+    background-color: rgb(52, 52, 145);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.p_on_w_h {
+    color: white;
+    text-align: center;
+}
+
 .svg2 {
     display: flex;
 }

@@ -16,6 +16,10 @@ var btnDown = document.getElementById('btn_down');
 var small = document.querySelector('.guid_drag');
 var Deletebtn = document.getElementById('Delete');
 var Resetbtn = document.getElementById('reset_btn');
+var widthplusbtn = document.getElementById('width_plus');
+var widthminusbtn = document.getElementById('width_minus');
+var heightplusbtn = document.getElementById('height_plus');
+var heightminusbtn = document.getElementById('height_minus');
 
 
 
@@ -28,6 +32,10 @@ sample.addEventListener('mousedown' , sampleGetinfo);
 btnLine.addEventListener('click' , lineSet);
 btnUp.addEventListener('click' , UP);
 Deletebtn.addEventListener('click' , Delete);
+widthplusbtn.addEventListener('click' , widthplus);
+widthminusbtn.addEventListener('click' , widthminus);
+heightplusbtn.addEventListener('click' , heightplus);
+heightminusbtn.addEventListener('click' , heightminus);
 
 
 
@@ -214,14 +222,14 @@ function Delete () {
     deskselected.remove();
 }
 
-
+// GET CORDINATE OF OFFSET FORM TOP AND LEFT (USE FOR UPDATE CORDINATE WHEN USER SCROLL IN THE SITE )
 function getcordinate() {
     rect = svg.getBoundingClientRect();
     rectTop = rect.top;
     rectLeft = rect.left;
 }
 
-
+//MAKE CHANGE TO THE BUTTON OF THE WALL OR LINE AFTER CLICK IT AND SET LIN VARIABLE TO TRUE FOR FUNCTIONALLITY
 function lineSet () {
     lin = true;
     btnLine.style.transform ="scale(1.1)";
@@ -249,6 +257,127 @@ function UP () {
     });
 }
 
+// WHEN USER SELECT BUTTON THIS FUNCTIONS GET THE SELECTED ELEMENT (DESK) AND CALL SETWIDTHHEIGHT FUNCTION ON IT
+function widthplus () {
+    var selected = document.getElementById(selectpolyid);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            base = el.baserotate;
+            rotate = el.rotate;
+        }
+    }); 
+
+    newWidhpoint = setWidthHieght(base , 10 , 0);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.baserotate = newWidhpoint;
+        }
+    }); 
+    var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
+    selected.setAttribute("points" ,newpoint );
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.point = newpoint;
+        }
+    });
+}
+
+function widthminus () {
+    var selected = document.getElementById(selectpolyid);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            base = el.baserotate;
+            rotate = el.rotate;
+        }
+    }); 
+
+    newWidhpoint = setWidthHieght(base , -10 , 0);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.baserotate = newWidhpoint;
+        }
+    }); 
+    var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
+    selected.setAttribute("points" ,newpoint );
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.point = newpoint;
+        }
+    });
+}
+
+function heightplus () {
+    var selected = document.getElementById(selectpolyid);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            base = el.baserotate;
+            rotate = el.rotate;
+        }
+    }); 
+
+    newWidhpoint = setWidthHieght(base , 0 , 10);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.baserotate = newWidhpoint;
+        }
+    }); 
+    var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
+    selected.setAttribute("points" ,newpoint );
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.point = newpoint;
+        }
+    });
+}
+
+function heightminus () {
+    var selected = document.getElementById(selectpolyid);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            base = el.baserotate;
+            rotate = el.rotate;
+        }
+    }); 
+
+    newWidhpoint = setWidthHieght(base , 0 , -10);
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.baserotate = newWidhpoint;
+        }
+    }); 
+    var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
+    selected.setAttribute("points" ,newpoint );
+    objects.polygon.forEach(el => {
+        if(el.id == selected.getAttribute('id')){
+            el.point = newpoint;
+        }
+    });
+}
+
+
+
+// CHANGE WIDTH AND HEIGHT OF THE DESK THAT CALL ON THE FUNCTION ABOVE
+function setWidthHieght (point,addW ,addH ) {
+            var splitBase;
+            var newpoint = [];
+            splitBase = point.split(' ').map(el => {
+                return  [Number(el.split(',')[0]) , Number(el.split(',')[1])] ;
+            });
+            splitBase[0][0] = splitBase[0][0] - (addW / 2);
+            splitBase[0][1] = splitBase[0][1] - (addH / 2);
+            splitBase[1][0] = splitBase[1][0] + (addW / 2);
+            splitBase[1][1] = splitBase[1][1] - (addH / 2);
+            splitBase[2][0] = splitBase[2][0] + (addW / 2);
+            splitBase[2][1] = splitBase[2][1] + (addH / 2);
+            splitBase[3][0] = splitBase[3][0] - (addW / 2);
+            splitBase[3][1] = splitBase[3][1] + (addH / 2);
+            splitBase.forEach(el => {
+                newpoint.push(el[0].toString().concat(','+el[1].toString())) ;
+                });
+                newpoint = newpoint.join(' ')
+                return newpoint;
+}
+
 
 
 
@@ -261,7 +390,7 @@ function sampleGetinfo(e) {
     height = desk_pos.height;
 }
 
-// CREATE A DESK FOR DRAG
+// CREATE A HTML_CSS (RECTANGLE) DESK FOR DRAGING TO THE SVG
 function create (ev) {
     if(max.value && min.value) {
         ev.preventDefault();
@@ -280,7 +409,6 @@ objects = new Objects();
 
 
 //  SET THE INFORMATION OF OBJECT(OLDOBJECT) BEFORE LOADING IN TO THE OBJECT
-console.log(oldobjects)
 if (oldobjects) {
 // CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
     oldobjects.polygon.forEach(el => {
@@ -569,20 +697,15 @@ window.onbeforeunload = () => {
     sessionStorage.removeItem('objects');
     if (reset == false) {
     sessionStorage.setItem('objects' , JSON.stringify(objects));
-    console.log('goodbye');
     }
     
 }
 
 var checkbtn = document.getElementById('check_objects');
 checkbtn.onclick = () => {
-    console.log(objects)
-    console.log(JSON.parse(sessionStorage.getItem('objects')))
-}
-sessionStorage.setItem('test' , 'test');
+    console.log(objects);
+};
 
-sessionStorage.removeItem('test');
-sessionStorage.setItem('test' , 'test2');
  
 
 
