@@ -16,11 +16,13 @@
                     <aside id="sidebar">
                         <form action="">
                             <h4>میزخود را بسازید</h4>
-                            <h5>ظرفیت میز</h5>
+                            <!-- <h5>ظرفیت میز</h5> -->
                             <div class="labels">
-                                <label for="text">: حداقل</label>
+                                <label for="text">: اسم میز</label>
+                            <input id="name_desk" class="text-center" max="10" min="1" type="text" required >
+                                <label for="text">: حداقل ظرفیت</label>
                             <input id="min" class="text-center" max="10" min="1" type="number" required >
-                            <label for="text">: حداکثر</label>
+                            <label for="text">: حداکثر ظرفیت</label>
                             <input id="max" class="text-center" max="10" min="1" type="number"required >
                             </div>
                             <button id="create_desk" class="btn btn-success m-2" type="submit" >بساز</button>

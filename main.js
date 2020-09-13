@@ -20,6 +20,7 @@ var widthplusbtn = document.getElementById('width_plus');
 var widthminusbtn = document.getElementById('width_minus');
 var heightplusbtn = document.getElementById('height_plus');
 var heightminusbtn = document.getElementById('height_minus');
+var deskNameInput = document.getElementById('name_desk');
 
 
 
@@ -55,6 +56,7 @@ var newPoint;
 var P;
 var maxValue;
 var minValue;
+var deskName;
 var circ = false;
 var lin;
 var Drag;
@@ -398,6 +400,7 @@ function create (ev) {
         small.style.visibility= 'visible';
         maxValue = max.value;
         minValue = min.value;
+        deskName = deskNameInput.value;
     }
 
 }
@@ -412,7 +415,7 @@ objects = new Objects();
 if (oldobjects) {
 // CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
     oldobjects.polygon.forEach(el => {
-        objects.createPolygon(el.point , null , el.min , el.max , el.baserotate , el.rotate);
+        objects.createPolygon(el.point , el.name , el.min , el.max , el.baserotate , el.rotate);
         
     })
     // objects.createLine (5 , 5 ,100 ,100)
@@ -644,7 +647,7 @@ function dragEndsvg (e) {
         svgX = e.clientX - rectLeft;
         svgY = e.clientY - rectTop;
         P = calCordinate(x , y , svgX , svgY , width , height);
-        objects.createPolygon(P , null , minValue , maxValue ,P , 0);
+        objects.createPolygon(P , deskName , minValue , maxValue ,P , 0);
         objects.polygon.forEach(el => {
             if(el.point == P){
                 var element = document.getElementById(el.id);
@@ -706,6 +709,21 @@ checkbtn.onclick = () => {
     console.log(objects);
 };
 
+
+function slug(titleStr){
+    titleStr = titleStr.replace(/^\s+|\s+$/g, '');
+    titleStr = titleStr.toLowerCase();
+   //persian support
+    titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]#u/, '') 
+    // Collapse whitespace and replace by -
+        .replace(/\s+/g, '-')
+        // Collapse dashes
+        .replace(/-+/g, '-');
+    return titleStr;       
+}
+
+test = slug('salam bar yari');
+console.log(test)
  
 
 

@@ -230,7 +230,8 @@ label {
     text-align: center;
     border:  rgb(35, 59, 59) 2px solid;
     background-color: rgb(47,79,79);
-    width: 50px;
+    border-radius: 10px;
+    width: 45px;
     height: 100px;
 }
 
@@ -238,7 +239,7 @@ label {
     margin: auto;
     width: 45px;
     height: 30px;
-    background-color: rgb(52, 52, 145);
+    background-color: rgb(90, 90, 209);
     display: flex;
     justify-content: center;
     align-items: center;
