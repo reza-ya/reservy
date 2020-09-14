@@ -21,6 +21,7 @@ var widthminusbtn = document.getElementById('width_minus');
 var heightplusbtn = document.getElementById('height_plus');
 var heightminusbtn = document.getElementById('height_minus');
 var deskNameInput = document.getElementById('name_desk');
+var chair_sample = document.getElementById('circle_chair');
 
 
 
@@ -29,6 +30,7 @@ svg.addEventListener('dragenter' , dragEndsvg);
 svg.addEventListener('dragover' , svgover);
 deskSubmit.addEventListener('click' , create);
 sample.addEventListener('dragstart' , dragStart);
+// sample.addEventListener('dragstart' , drag)fsdfsdf
 sample.addEventListener('mousedown' , sampleGetinfo);
 btnLine.addEventListener('click' , lineSet);
 btnUp.addEventListener('click' , UP);
@@ -37,6 +39,7 @@ widthplusbtn.addEventListener('click' , widthplus);
 widthminusbtn.addEventListener('click' , widthminus);
 heightplusbtn.addEventListener('click' , heightplus);
 heightminusbtn.addEventListener('click' , heightminus);
+chair_sample.addEventListener('mousedown' , getinfofcirclechair);
 
 
 
@@ -68,7 +71,8 @@ var deskselected;
 var cal = false;
 var lineBuild;
 var reset = false;
-
+var rectangle_desk = false;
+var circle_chair = false;
 
 // GET NEW CORDINATE WHEN SCROLLING WINDOWS TO BE SURE THAT CORDINATE OF SVG WILL NOT MESS UP !!
 window.onscroll = function() {
@@ -147,6 +151,7 @@ class Objects {
         circle.setAttribute("stroke-width" ,1);
         circle.setAttribute("fill" ,fill);
         this.circle.push({
+            id:"circle"+this.circleid,
             cx:cx,
             cy:cy,
             r:r,
@@ -385,11 +390,21 @@ function setWidthHieght (point,addW ,addH ) {
 
 // PASS THE INFORMATION GLOBALLY WHEN CLICK TO DRAG DESK
 function sampleGetinfo(e) {
+    rectangle_desk = true;
     var desk_pos = sample.getBoundingClientRect();
     x = e.clientX - desk_pos.left;
     y = e.clientY - desk_pos.top;
     width = desk_pos.width;
     height = desk_pos.height;
+}
+
+function getinfofcirclechair (e) {
+    circle_chair = true;
+    var chair_pos = chair_sample.getBoundingClientRect();
+    x = e.clientX - chair_pos.left;
+    y = e.clientY - chair_pos.top;
+    console.log(x , y)
+
 }
 
 // CREATE A HTML_CSS (RECTANGLE) DESK FOR DRAGING TO THE SVG
@@ -423,6 +438,10 @@ if (oldobjects) {
         objects.createLine (el.x1 , el.y1 , el.x2 , el.y2);
     })
 
+    oldobjects.circle.forEach(el => {
+        objects.createCircle (el.cx , el.cy , el.r , el.fill);
+    })
+
 }
 
 
@@ -432,7 +451,7 @@ if (oldobjects) {
     svg.addEventListener('mousedown' , startDrag);
     svg.addEventListener('mousemove' , drag);
     svg.addEventListener('mouseup' , endDrag);
-    svg.addEventListener('mouseleave' , endDrag2);  
+    svg.addEventListener('mouseleave' , endDrag2);
 
 
 
@@ -457,7 +476,6 @@ function startDrag(evt) {
         oldPoint = selectElement.getAttribute("points");
     // DRAG CIRCLE CHAIR !!!
     }else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
-        console.log(evt.target);
         circ = true;
     // CREATE LINE AS A WALL !!!
     }else if (evt.buttons == 1 && lin == true) {
@@ -520,6 +538,12 @@ function drag(evt) {
         newy = evt.clientY - rectTop;
         evt.target.setAttribute("cx" , newx);
         evt.target.setAttribute("cy" , newy);
+        objects.circle.forEach(el => {
+            if(el.id == evt.target.getAttribute('id')){
+                el.cx = newx;
+                el.cy = newy;
+            }
+        });
     }else if (Drag == true) {
         lineBuild = document.getElementById("line"+objects.lineid);
         newx = Math.floor(evt.clientX - rectLeft);
@@ -642,7 +666,10 @@ function svgover (e) {
 }
 
 function dragEndsvg (e) {
-    small.style.visibility="";
+    console.log(rectangle_desk)
+    // MAKE A DESK WHEN DRAG END
+    if (rectangle_desk == true) {
+        small.style.visibility="";
     sample.ondragend = function(e)  {
         svgX = e.clientX - rectLeft;
         svgY = e.clientY - rectTop;
@@ -657,6 +684,21 @@ function dragEndsvg (e) {
             }
         });
         
+    }
+    rectangle_desk = false;
+    }
+
+    if (circle_chair == true) {
+        // MAKE A CIRCLE CHAIR WHEN DRAG END
+        chair_sample.ondragend = function (e) {
+            svgX = e.clientX - rectLeft;
+            svgY = e.clientY - rectTop;
+            console.log(svgX , svgY);
+            objects.createCircle(svgX , svgY , 15 , "lightyellow");
+
+        }
+        
+
     }
 }
 //  DRAG AND DROP DESK END
