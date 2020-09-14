@@ -482,7 +482,7 @@ function startDrag(evt) {
         Drag = true;
         x = Math.round(evt.clientX - rectLeft);
         y = Math.round(evt.clientY - rectTop);
-        switch (x % 4) {
+        switch (x % 7) {
             case 1:
                 x = x - 1;
                 break;
@@ -490,10 +490,19 @@ function startDrag(evt) {
                 x = x - 2;
                 break
             case 3:
+                x = x - 3;
+                break;
+            case 4:
+                x = x + 3;
+                break;
+            case 5:
+                x = x + 2;
+                break;
+            case 6:
                 x = x + 1;
                 break;
         }
-        switch (y % 4) {
+        switch (y % 7) {
             case 1:
                 y = y - 1;
                 break;
@@ -501,6 +510,15 @@ function startDrag(evt) {
                 y = y - 2;
                 break
             case 3:
+                y = y - 3;
+                break;
+            case 4:
+                y = y + 3;
+                break;
+            case 5:
+                y = y + 2;
+                break;
+            case 6:
                 y = y + 1;
                 break;
         };
@@ -549,7 +567,7 @@ function drag(evt) {
         newx = Math.floor(evt.clientX - rectLeft);
         newy = Math.floor(evt.clientY - rectTop);
         
-        switch (newx % 4) {
+        switch (newx % 7) {
             case 1:
                 newx = newx - 1;
                 break;
@@ -557,10 +575,19 @@ function drag(evt) {
                 newx = newx - 2;
                 break
             case 3:
+                newx = newx - 3;
+                break;
+            case 4:
+                newx = newx + 3;
+                break;
+            case 5:
+                newx = newx + 2;
+                break;
+            case 6:
                 newx = newx + 1;
                 break;
         }
-        switch (newy % 4) {
+        switch (newy % 7) {
             case 1:
                 newy = newy - 1;
                 break;
@@ -568,6 +595,15 @@ function drag(evt) {
                 newy = newy - 2;
                 break
             case 3:
+                newy = newy - 3;
+                break;
+            case 4:
+                newy = newy + 3;
+                break;
+            case 5:
+                newy = newy + 2;
+                break;
+            case 6:
                 newy = newy + 1;
                 break;
         };
@@ -752,20 +788,7 @@ checkbtn.onclick = () => {
 };
 
 
-function slug(titleStr){
-    titleStr = titleStr.replace(/^\s+|\s+$/g, '');
-    titleStr = titleStr.toLowerCase();
-   //persian support
-    titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]#u/, '') 
-    // Collapse whitespace and replace by -
-        .replace(/\s+/g, '-')
-        // Collapse dashes
-        .replace(/-+/g, '-');
-    return titleStr;       
-}
 
-test = slug('salam bar yari');
-console.log(test)
  
 
 
