@@ -701,14 +701,17 @@ function svgover (e) {
     
 }
 
+svg.ondragover = (e) => {
+    svgX = e.clientX - rectLeft;
+    svgY = e.clientY - rectTop;
+}
+
 function dragEndsvg (e) {
     console.log(rectangle_desk)
     // MAKE A DESK WHEN DRAG END
     if (rectangle_desk == true) {
         small.style.visibility="";
     sample.ondragend = function(e)  {
-        svgX = e.clientX - rectLeft;
-        svgY = e.clientY - rectTop;
         P = calCordinate(x , y , svgX , svgY , width , height);
         objects.createPolygon(P , deskName , minValue , maxValue ,P , 0);
         objects.polygon.forEach(el => {
@@ -727,8 +730,6 @@ function dragEndsvg (e) {
     if (circle_chair == true) {
         // MAKE A CIRCLE CHAIR WHEN DRAG END
         chair_sample.ondragend = function (e) {
-            svgX = e.clientX - rectLeft;
-            svgY = e.clientY - rectTop;
             console.log(svgX , svgY);
             objects.createCircle(svgX , svgY , 15 , "lightyellow");
 
@@ -786,6 +787,13 @@ var checkbtn = document.getElementById('check_objects');
 checkbtn.onclick = () => {
     console.log(objects);
 };
+
+total = 0;
+function test () {
+    total += 1;
+}
+test()
+console.log(total);
 
 
 
