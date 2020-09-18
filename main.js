@@ -3,6 +3,7 @@ var oldobjects = null;
 oldobjects = JSON.parse(sessionStorage.getItem('objects'));
 
 
+
 // GET ELEMENT OF BUTTON AND INPUT
 var svg = document.getElementById('vector');
 var rect = svg.getBoundingClientRect();
@@ -25,21 +26,23 @@ var chair_sample = document.getElementById('circle_chair');
 
 
 
+
+
 // EVENT LISTENERS
-svg.addEventListener('dragenter' , dragEndsvg);
-svg.addEventListener('dragover' , svgover);
-deskSubmit.addEventListener('click' , create);
-sample.addEventListener('dragstart' , dragStart);
+svg.addEventListener('dragenter', dragEndsvg);
+svg.addEventListener('dragover', svgover);
+deskSubmit.addEventListener('click', create);
+sample.addEventListener('dragstart', dragStart);
 // sample.addEventListener('dragstart' , drag)fsdfsdf
-sample.addEventListener('mousedown' , sampleGetinfo);
-btnLine.addEventListener('click' , lineSet);
-btnUp.addEventListener('click' , UP);
-Deletebtn.addEventListener('click' , Delete);
-widthplusbtn.addEventListener('click' , widthplus);
-widthminusbtn.addEventListener('click' , widthminus);
-heightplusbtn.addEventListener('click' , heightplus);
-heightminusbtn.addEventListener('click' , heightminus);
-chair_sample.addEventListener('mousedown' , getinfofcirclechair);
+sample.addEventListener('mousedown', sampleGetinfo);
+btnLine.addEventListener('click', lineSet);
+btnUp.addEventListener('click', UP);
+Deletebtn.addEventListener('click', Delete);
+widthplusbtn.addEventListener('click', widthplus);
+widthminusbtn.addEventListener('click', widthminus);
+heightplusbtn.addEventListener('click', heightplus);
+heightminusbtn.addEventListener('click', heightminus);
+chair_sample.addEventListener('mousedown', getinfofcirclechair);
 
 
 
@@ -73,9 +76,131 @@ var lineBuild;
 var reset = false;
 var rectangle_desk = false;
 var circle_chair = false;
+var condition = [];
+var x1 = false;
+var x2 =false;
+var lineEditeId = 0;
+var Icondition;
+var svgLineDragPermission = false;
+var ifWork = true;
+
+
+
+
+function lineEdite (e) {
+    svg.style.cursor = 'grabing';
+    ifWork = false;
+    svg.addEventListener('mousemove' , svgLineEdit);
+    svgLineDragPermission = true;
+    console.log('click');
+    console.log(x1);
+    console.log(x2);
+    var lineEdite = document.getElementById(lineEditeId);
+    var drag = true;
+    function svgLineEdit (e)  {
+        console.log(x1);
+        if (drag) {
+            if (x1) {
+                console.log('here')
+            newx = e.clientX - rectLeft;
+            newy = e.clientY - rectTop;
+            lineEdite.setAttribute('x1' ,newx );
+            lineEdite.setAttribute('y1' ,newy );
+            condition[Icondition].splice(0, 1 , newx);
+            condition[Icondition].splice(1 , 1 , newy);
+            }
+            if (x2) {
+                console.log('here at x2')
+                newx = e.clientX - rectLeft;
+                newy = e.clientY - rectTop;
+                lineEdite.setAttribute('x2' ,newx );
+                lineEdite.setAttribute('y2' ,newy );
+                condition[Icondition].splice(2 , 1 , newx);
+                condition[Icondition].splice(3 , 1 , newy);
+            }
+        }
+
+       
+
+    }
+
+    svg.onmouseup = (e) => {
+        console.log('hellloo')
+        drag = false;
+        x1 = false;     
+        x2 = false;
+        svg.removeEventListener('mousemove' , svgLineEdit);
+        svgLineDragPermission = false;
+        lineEditeId = 0;
+        ifWork = true;
+        svg.style.cursor = '';
+    }
+
+}
+
+
+
+
+svg.onmousemove = (e) => {
+    svgX = e.clientX - rectLeft;
+    svgY = e.clientY - rectTop;
+    
+    if (ifWork) {
+        for (i = 0; i<condition.length; i++) {
+            // console.log(svgX , condition[0][0])
+            // console.log(svgY , condition[0][1])
+            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 5) {
+                
+                Icondition = i;
+                lineEditeId = condition[i][4];
+                x1 = true;
+                x2 =false;
+                svg.addEventListener('mousedown' , lineEdite);
+                console.log('got you1 for'+i);
+                svg.style.cursor = 'grab';
+                break
+                    
+                
+            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 5) {
+                svg.style.cursor = 'grab';
+                Icondition = i;
+                x1 = false;
+                x2 = true;
+                lineEditeId = condition[i][4];
+                svg.addEventListener('mousedown' , lineEdite);
+                console.log('got you2 for' +i);
+                break
+    
+    
+            }else {
+                svg.style.cursor = '';
+                x1 = false;
+                x2 = false;
+            }
+            if (x1 == false && x2 == false) {
+                console.log('else')
+                lineEditeId = 0;
+                svg.style.cursor = '';
+                x1 = false;
+                x2 = false;
+                svgLineDragPermission = false;
+            }
+            
+        } 
+        
+    }
+    
+        // if (((svgX -244) + 20)*((svgX -244) + 20) + (svgY - 133)*(svgY - 133) < 20) {
+        //     console.log('got you')
+    
+    
+        // }
+    
+}
+
 
 // GET NEW CORDINATE WHEN SCROLLING WINDOWS TO BE SURE THAT CORDINATE OF SVG WILL NOT MESS UP !!
-window.onscroll = function() {
+window.onscroll = function () {
     getcordinate();
 }
 
@@ -88,18 +213,18 @@ Resetbtn.onclick = () => {
 
 
 // CHECK WHICH ELEMENT SELECTED AND CHANGE STYLE
-function checkSelectItem () {
-    if(selectpolyid) {
-        if(deskselected) {
+function checkSelectItem() {
+    if (selectpolyid) {
+        if (deskselected) {
             deskselected.style.fill = "";
-            deskselected.style.filter="";
+            deskselected.style.filter = "";
         }
         deskselected = document.getElementById(selectpolyid);
         deskselected.style.fill = "#6e2503";
-        deskselected.style.filter="url(#f1)";
+        deskselected.style.filter = "url(#f1)";
     }
 }
-setInterval(checkSelectItem , 10);
+setInterval(checkSelectItem, 10);
 
 
 
@@ -115,114 +240,114 @@ class Objects {
     }
 
     // PROTOTYPE FOR CREATE POLYGON
-    createPolygon( point , name , min , max ,baserotate, rotate) {
+    createPolygon(point, name, min, max, baserotate, rotate) {
         this.polyid = this.polyid + 1;
-        var polygon = document.createElementNS("http://www.w3.org/2000/svg" ,'polygon');
+        var polygon = document.createElementNS("http://www.w3.org/2000/svg", 'polygon');
         svg.appendChild(polygon);
-        polygon.setAttribute("points" ,point);
-        polygon.setAttribute("stroke-width" ,8);
-        polygon.setAttribute("id" ,"poly"+this.polyid);
+        polygon.setAttribute("points", point);
+        polygon.setAttribute("stroke-width", 8);
+        polygon.setAttribute("id", "poly" + this.polyid);
         polygon.classList = ".draggable";
-        polygon.addEventListener('click' , forEdit)
+        polygon.addEventListener('click', forEdit)
 
         this.polygon.push({
-            id:"poly"+this.polyid,
-            point:point,
-            baserotate:baserotate,
-            rotate:rotate,
-            name:name,
-            min:min,
-            max:max,
-            rotate:rotate
+            id: "poly" + this.polyid,
+            point: point,
+            baserotate: baserotate,
+            rotate: rotate,
+            name: name,
+            min: min,
+            max: max,
+            rotate: rotate
         });
     }
 
     // PROTOTYPE FOR CREATE CIRCLE
-    createCircle (cx ,cy ,r ,fill) {
+    createCircle(cx, cy, r, fill) {
         this.circleid = this.circleid + 1;
-        var circle = document.createElementNS("http://www.w3.org/2000/svg" ,'circle');
+        var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
         svg.appendChild(circle);
         circle.classList = ".circle_draggable";
-        circle.setAttribute("id" ,"circle"+this.circleid);
-        circle.setAttribute("cx" ,cx);
-        circle.setAttribute("cy" ,cy);
-        circle.setAttribute("r" ,r);
-        circle.setAttribute("stroke" ,"black");
-        circle.setAttribute("stroke-width" ,1);
-        circle.setAttribute("fill" ,fill);
+        circle.setAttribute("id", "circle" + this.circleid);
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("r", r);
+        circle.setAttribute("stroke", "black");
+        circle.setAttribute("stroke-width", 1);
+        circle.setAttribute("fill", fill);
         this.circle.push({
-            id:"circle"+this.circleid,
-            cx:cx,
-            cy:cy,
-            r:r,
-            fill:fill
+            id: "circle" + this.circleid,
+            cx: cx,
+            cy: cy,
+            r: r,
+            fill: fill
         });
     }
     // PROTOTYPE FOR CREATE LINE
-    createLine (x1 , y1 , x2 , y2 ) {
+    createLine(x1, y1, x2, y2) {
         this.lineid = this.lineid + 1;
-        var line = document.createElementNS("http://www.w3.org/2000/svg" ,'line');
+        var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
         svg.appendChild(line);
-        line.setAttribute("id" ,"line"+this.lineid);
-        line.setAttribute("x1" ,x1);
-        line.setAttribute("y1" ,y1);
-        line.setAttribute("x2" ,x2);
-        line.setAttribute("y2" ,y2);
-        line.setAttribute("style" ,"stroke:rgb(0,0,0);stroke-width:4");
+        line.setAttribute("id", "line" + this.lineid);
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+        line.setAttribute("style", "stroke:rgb(0,0,0);stroke-width:4");
         this.line.push({
-            id:"line"+this.lineid,
-            x1:x1,
-            y1:y1,
-            x2:x2,
-            y2:y2
+            id: "line" + this.lineid,
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2
         });
     }
 
     // PROTOTYPE FOR ROTATE POLYGON
-    rotatePolygon (point , Teta ) {
-        Teta = (Math.PI/180) * Teta;
+    rotatePolygon(point, Teta) {
+        Teta = (Math.PI / 180) * Teta;
         var x = [];
         var y = [];
         var fiftth = [];
         var forth = [];
         var third = [];
-        var rotate = [[Math.cos(Teta) ,-(Math.sin(Teta)) ], [Math.sin(Teta) ,Math.cos(Teta) ]];
+        var rotate = [[Math.cos(Teta), -(Math.sin(Teta))], [Math.sin(Teta), Math.cos(Teta)]];
         let first = point.split(" ");
         let second = first.map(el => el.split(","));
         second.forEach(el => {
             x.push(Number(el[0]));
             y.push(Number(el[1]));
-        
+
         });
-        var Midx = (x[1] + x[0])/2;
-        var Midy = (y[2] + y[1])/2;
-        x = x.map(el =>el =el - Midx);
-        y = y.map(el =>el = Midy - el);
-        for (let i = 0; i<x.length; i++) {
-            third.push([x[i] , y[i]]);
-          };
-          third = third.map(el => {
-            forth.push(matrixMultiply(rotate , el));
-          });
-          forth.map(el => {
-            el[0] =  Midx - el[0];
-            el[1] =  Midy - el[1];
-          });
-          forth.forEach(el => {
-          fiftth.push(el[0].toString().concat(','+el[1].toString())) ;
-          })
-          var rotatePoint =  fiftth.join(" ");
-          return rotatePoint;
+        var Midx = (x[1] + x[0]) / 2;
+        var Midy = (y[2] + y[1]) / 2;
+        x = x.map(el => el = el - Midx);
+        y = y.map(el => el = Midy - el);
+        for (let i = 0; i < x.length; i++) {
+            third.push([x[i], y[i]]);
+        };
+        third = third.map(el => {
+            forth.push(matrixMultiply(rotate, el));
+        });
+        forth.map(el => {
+            el[0] = Midx - el[0];
+            el[1] = Midy - el[1];
+        });
+        forth.forEach(el => {
+            fiftth.push(el[0].toString().concat(',' + el[1].toString()));
+        })
+        var rotatePoint = fiftth.join(" ");
+        return rotatePoint;
     }
-    
+
 }
 
 
-function Delete () {
+function Delete() {
     objects.polygon.forEach(el => {
-        if(el.id == selectpolyid){
+        if (el.id == selectpolyid) {
             console.log(objects.polygon.indexOf(el))
-            objects.polygon.splice(objects.polygon.indexOf(el),1);
+            objects.polygon.splice(objects.polygon.indexOf(el), 1);
         }
     });
     selectpolyid = null;
@@ -237,125 +362,125 @@ function getcordinate() {
 }
 
 //MAKE CHANGE TO THE BUTTON OF THE WALL OR LINE AFTER CLICK IT AND SET LIN VARIABLE TO TRUE FOR FUNCTIONALLITY
-function lineSet () {
+function lineSet() {
     lin = true;
-    btnLine.style.transform ="scale(1.1)";
+    btnLine.style.transform = "scale(1.1)";
     btnLine.style.backgroundColor = "purple";
     btnLine.style.boxShadow = "3px 3px 4px black"
 }
 
 
 // ROTATE DESK SVG
-function UP () {
+function UP() {
     var selected = document.getElementById(selectpolyid);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             el.rotate += 10;
             rotate = el.rotate;
         }
     });
     var newpoint = objects.rotatePolygon(base, rotate);
-    selected.setAttribute("points" ,newpoint );
+    selected.setAttribute("points", newpoint);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.point = newpoint;
         }
     });
 }
 
 // WHEN USER SELECT BUTTON THIS FUNCTIONS GET THE SELECTED ELEMENT (DESK) AND CALL SETWIDTHHEIGHT FUNCTION ON IT
-function widthplus () {
+function widthplus() {
     var selected = document.getElementById(selectpolyid);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             rotate = el.rotate;
         }
-    }); 
+    });
 
-    newWidhpoint = setWidthHieght(base , 10 , 0);
+    newWidhpoint = setWidthHieght(base, 10, 0);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.baserotate = newWidhpoint;
         }
-    }); 
+    });
     var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
-    selected.setAttribute("points" ,newpoint );
+    selected.setAttribute("points", newpoint);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.point = newpoint;
         }
     });
 }
 
-function widthminus () {
+function widthminus() {
     var selected = document.getElementById(selectpolyid);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             rotate = el.rotate;
         }
-    }); 
+    });
 
-    newWidhpoint = setWidthHieght(base , -10 , 0);
+    newWidhpoint = setWidthHieght(base, -10, 0);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.baserotate = newWidhpoint;
         }
-    }); 
+    });
     var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
-    selected.setAttribute("points" ,newpoint );
+    selected.setAttribute("points", newpoint);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.point = newpoint;
         }
     });
 }
 
-function heightplus () {
+function heightplus() {
     var selected = document.getElementById(selectpolyid);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             rotate = el.rotate;
         }
-    }); 
+    });
 
-    newWidhpoint = setWidthHieght(base , 0 , 10);
+    newWidhpoint = setWidthHieght(base, 0, 10);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.baserotate = newWidhpoint;
         }
-    }); 
+    });
     var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
-    selected.setAttribute("points" ,newpoint );
+    selected.setAttribute("points", newpoint);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.point = newpoint;
         }
     });
 }
 
-function heightminus () {
+function heightminus() {
     var selected = document.getElementById(selectpolyid);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             rotate = el.rotate;
         }
-    }); 
+    });
 
-    newWidhpoint = setWidthHieght(base , 0 , -10);
+    newWidhpoint = setWidthHieght(base, 0, -10);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.baserotate = newWidhpoint;
         }
-    }); 
+    });
     var newpoint = objects.rotatePolygon(newWidhpoint, rotate);
-    selected.setAttribute("points" ,newpoint );
+    selected.setAttribute("points", newpoint);
     objects.polygon.forEach(el => {
-        if(el.id == selected.getAttribute('id')){
+        if (el.id == selected.getAttribute('id')) {
             el.point = newpoint;
         }
     });
@@ -364,25 +489,25 @@ function heightminus () {
 
 
 // CHANGE WIDTH AND HEIGHT OF THE DESK THAT CALL ON THE FUNCTION ABOVE
-function setWidthHieght (point,addW ,addH ) {
-            var splitBase;
-            var newpoint = [];
-            splitBase = point.split(' ').map(el => {
-                return  [Number(el.split(',')[0]) , Number(el.split(',')[1])] ;
-            });
-            splitBase[0][0] = splitBase[0][0] - (addW / 2);
-            splitBase[0][1] = splitBase[0][1] - (addH / 2);
-            splitBase[1][0] = splitBase[1][0] + (addW / 2);
-            splitBase[1][1] = splitBase[1][1] - (addH / 2);
-            splitBase[2][0] = splitBase[2][0] + (addW / 2);
-            splitBase[2][1] = splitBase[2][1] + (addH / 2);
-            splitBase[3][0] = splitBase[3][0] - (addW / 2);
-            splitBase[3][1] = splitBase[3][1] + (addH / 2);
-            splitBase.forEach(el => {
-                newpoint.push(el[0].toString().concat(','+el[1].toString())) ;
-                });
-                newpoint = newpoint.join(' ')
-                return newpoint;
+function setWidthHieght(point, addW, addH) {
+    var splitBase;
+    var newpoint = [];
+    splitBase = point.split(' ').map(el => {
+        return [Number(el.split(',')[0]), Number(el.split(',')[1])];
+    });
+    splitBase[0][0] = splitBase[0][0] - (addW / 2);
+    splitBase[0][1] = splitBase[0][1] - (addH / 2);
+    splitBase[1][0] = splitBase[1][0] + (addW / 2);
+    splitBase[1][1] = splitBase[1][1] - (addH / 2);
+    splitBase[2][0] = splitBase[2][0] + (addW / 2);
+    splitBase[2][1] = splitBase[2][1] + (addH / 2);
+    splitBase[3][0] = splitBase[3][0] - (addW / 2);
+    splitBase[3][1] = splitBase[3][1] + (addH / 2);
+    splitBase.forEach(el => {
+        newpoint.push(el[0].toString().concat(',' + el[1].toString()));
+    });
+    newpoint = newpoint.join(' ')
+    return newpoint;
 }
 
 
@@ -398,21 +523,21 @@ function sampleGetinfo(e) {
     height = desk_pos.height;
 }
 
-function getinfofcirclechair (e) {
+function getinfofcirclechair(e) {
     circle_chair = true;
     var chair_pos = chair_sample.getBoundingClientRect();
     x = e.clientX - chair_pos.left;
     y = e.clientY - chair_pos.top;
-    console.log(x , y)
+    console.log(x, y)
 
 }
 
 // CREATE A HTML_CSS (RECTANGLE) DESK FOR DRAGING TO THE SVG
-function create (ev) {
-    if(max.value && min.value) {
+function create(ev) {
+    if (max.value && min.value) {
         ev.preventDefault();
         sample.className = 'sample_desk';
-        small.style.visibility= 'visible';
+        small.style.visibility = 'visible';
         maxValue = max.value;
         minValue = min.value;
         deskName = deskNameInput.value;
@@ -428,18 +553,18 @@ objects = new Objects();
 
 //  SET THE INFORMATION OF OBJECT(OLDOBJECT) BEFORE LOADING IN TO THE OBJECT
 if (oldobjects) {
-// CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
+    // CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
     oldobjects.polygon.forEach(el => {
-        objects.createPolygon(el.point , el.name , el.min , el.max , el.baserotate , el.rotate);
-        
+        objects.createPolygon(el.point, el.name, el.min, el.max, el.baserotate, el.rotate);
+
     })
     // objects.createLine (5 , 5 ,100 ,100)
     oldobjects.line.forEach(el => {
-        objects.createLine (el.x1 , el.y1 , el.x2 , el.y2);
+        objects.createLine(el.x1, el.y1, el.x2, el.y2);
     })
 
     oldobjects.circle.forEach(el => {
-        objects.createCircle (el.cx , el.cy , el.r , el.fill);
+        objects.createCircle(el.cx, el.cy, el.r, el.fill);
     })
 
 }
@@ -448,14 +573,14 @@ if (oldobjects) {
 
 
 
-    svg.addEventListener('mousedown' , startDrag);
-    svg.addEventListener('mousemove' , drag);
-    svg.addEventListener('mouseup' , endDrag);
-    svg.addEventListener('mouseleave' , endDrag2);
+svg.addEventListener('mousedown', startDrag);
+svg.addEventListener('mousemove', drag);
+svg.addEventListener('mouseup', endDrag);
+svg.addEventListener('mouseleave', endDrag2);
 
 
 
-function forEdit () {
+function forEdit() {
     selectpolyid = this.getAttribute('id');
     rotateCriteria = this.getAttribute('points');
 }
@@ -465,8 +590,8 @@ function forEdit () {
 
 
 // SVG DRAG FUNCTIONALLITY
-    // DRAG START
-    //  THIS FUNCTIONS ATTACH TO THE MOUSEDOWN , MOUSEMOVE,MOUSEUP AND MOUSELEAVE EVENT 
+// DRAG START
+//  THIS FUNCTIONS ATTACH TO THE MOUSEDOWN , MOUSEMOVE,MOUSEUP AND MOUSELEAVE EVENT 
 function startDrag(evt) {
     // DRAG POLYGON DESK !!!
     if (evt.buttons == 1 && evt.target.classList[0] == ".draggable") {
@@ -474,11 +599,11 @@ function startDrag(evt) {
         x = evt.clientX - rectLeft;
         y = evt.clientY - rectTop;
         oldPoint = selectElement.getAttribute("points");
-    // DRAG CIRCLE CHAIR !!!
-    }else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
+        // DRAG CIRCLE CHAIR !!!
+    } else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
         circ = true;
-    // CREATE LINE AS A WALL !!!
-    }else if (evt.buttons == 1 && lin == true) {
+        // CREATE LINE AS A WALL !!!
+    } else if (evt.buttons == 1 && lin == true) {
         Drag = true;
         x = Math.round(evt.clientX - rectLeft);
         y = Math.round(evt.clientY - rectTop);
@@ -522,13 +647,17 @@ function startDrag(evt) {
                 y = y + 1;
                 break;
         };
-        objects.createLine(x , y , x ,y);
+        if (lineEditeId == 0) {
+            objects.createLine(x, y, x, y);
+        }
+        newx = x;
+        newy = y;
 
     }
 }
 
 
-    // DRAG ITSELF
+// DRAG ITSELF
 function drag(evt) {
     if (selectElement) {
         selectElement.style.cursor = "grabbing";
@@ -537,36 +666,36 @@ function drag(evt) {
         addx = newx - x;
         addy = newy - y;
         objects.polygon.forEach(el => {
-            if(el.id == selectElement.getAttribute('id')){
+            if (el.id == selectElement.getAttribute('id')) {
                 el.baserotate;
-                calbase = addPiont(el.baserotate , addx ,addy);
+                calbase = addPiont(el.baserotate, addx, addy);
                 cal = true;
             }
         });
-        
-        newPoint = addPiont(oldPoint , addx ,addy);
-        selectElement.setAttribute("points" , newPoint);
+
+        newPoint = addPiont(oldPoint, addx, addy);
+        selectElement.setAttribute("points", newPoint);
         objects.polygon.forEach(el => {
-            if(el.id == selectElement.getAttribute('id')){
+            if (el.id == selectElement.getAttribute('id')) {
                 el.point = newPoint;
             }
         });
-    }else if (circ == true) {
+    } else if (circ == true) {
         newx = evt.clientX - rectLeft;
         newy = evt.clientY - rectTop;
-        evt.target.setAttribute("cx" , newx);
-        evt.target.setAttribute("cy" , newy);
+        evt.target.setAttribute("cx", newx);
+        evt.target.setAttribute("cy", newy);
         objects.circle.forEach(el => {
-            if(el.id == evt.target.getAttribute('id')){
+            if (el.id == evt.target.getAttribute('id')) {
                 el.cx = newx;
                 el.cy = newy;
             }
         });
-    }else if (Drag == true) {
-        lineBuild = document.getElementById("line"+objects.lineid);
+    } else if (Drag == true) {
+        lineBuild = document.getElementById("line" + objects.lineid);
         newx = Math.floor(evt.clientX - rectLeft);
         newy = Math.floor(evt.clientY - rectTop);
-        
+
         switch (newx % 7) {
             case 1:
                 newx = newx - 1;
@@ -607,50 +736,71 @@ function drag(evt) {
                 newy = newy + 1;
                 break;
         };
-        lineBuild.setAttribute("x2" , newx);
-        lineBuild.setAttribute("y2" , newy);
+        if (lineEditeId == 0) {
+            lineBuild.setAttribute("x2", newx);
+        lineBuild.setAttribute("y2", newy);
+        }
     }
 
 }
 
-    // DRAG END
+// DRAG END
 function endDrag(evt) {
-        if (cal == true) {
-            objects.polygon.forEach(el => {
-            if(el.id == selectElement.getAttribute('id')){
+    if (cal == true) {
+        objects.polygon.forEach(el => {
+            if (el.id == selectElement.getAttribute('id')) {
                 el.baserotate;
                 el.baserotate = calbase;
             }
         });
         cal = false;
-            }
-        selectElement ? selectElement.style.cursor = "grab" :
+    }
+    selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
-        selectElement = null;
-        // var lineBuildid = lineBuild.getAttribute('id');
-        // console.log(lineBuildid);
-        if (lineBuild) {
-            objects.line.forEach(el => {
-            if(el.id == lineBuild.getAttribute('id')){
+    selectElement = null;
+    // var lineBuildid = lineBuild.getAttribute('id');
+    // console.log(lineBuildid);
+    if (lineBuild) {
+        objects.line.forEach(el => {
+            if (el.id == lineBuild.getAttribute('id')) {
                 el.x2 = newx;
                 el.y2 = newy;
             }
         });
+    }
+    lineBuild = document.getElementById("line" + objects.lineid);
+    if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
+        if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
+            objects.line.pop();
+            if (lineEditeId = 0 ) {
+                lineBuild.remove();
+            }
+            objects.lineid = objects.lineid - 1;
+        }else {
+            var idofline = lineBuild.getAttribute('id');
+            if (lineEditeId == 0) {
+                condition.push([x , y , newx ,newy ,idofline])
+            }
         }
-        lineBuild = false;
-        circ = false;
-        Drag = false;
+    }
+    x = 0;
+    y = 0;
+    newx = 0;
+    newy = 0;
+    lineBuild = false;
+    circ = false;
+    Drag = false;
 }
 
 function endDrag2(evt) {
-        selectElement ? selectElement.style.cursor = "grab" :
+    selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
-        selectElement = null;
-        circ = false;
-        Drag = false;
-        lin = false;
-        btnLine.style.transform ="scale(1)";
-        btnLine.style.backgroundColor = "";
+    selectElement = null;
+    circ = false;
+    Drag = false;
+    lin = false;
+    btnLine.style.transform = "scale(1)";
+    btnLine.style.backgroundColor = "";
 }
 // SVG DRAG FUNCTIONALLITY END
 
@@ -660,7 +810,7 @@ function endDrag2(evt) {
 
 
 // FUNCTION THAT ADD POINT OF POLYGON ELEMENTS
-function addPiont (piont , addx ,addy) {
+function addPiont(piont, addx, addy) {
     let x = [];
     let y = [];
     let first = piont.split(" ");
@@ -668,20 +818,20 @@ function addPiont (piont , addx ,addy) {
     second.forEach(el => {
         x.push(Number(el[0]));
         y.push(Number(el[1]));
-    
+
     })
-   x = x.map(el =>el = el + addx).map(el => el.toString());
-   y = y.map(el =>el = el + addy).map(el => el.toString());
-   var newpoint = [];
-   for (let i = 0; i<x.length; i++) {
-     newpoint.push(x[i].concat(","+y[i]))
-   }
-   newpoint = newpoint.join(" ");
-   return newpoint;
+    x = x.map(el => el = el + addx).map(el => el.toString());
+    y = y.map(el => el = el + addy).map(el => el.toString());
+    var newpoint = [];
+    for (let i = 0; i < x.length; i++) {
+        newpoint.push(x[i].concat("," + y[i]))
+    }
+    newpoint = newpoint.join(" ");
+    return newpoint;
 }
 
 // FUNCTION FOR CALCULATE CORDINATE OF POLYGON WITH REGARD TO POSITION OF CLICK
-function calCordinate (x , y , svgX , svgY , width , height ) {
+function calCordinate(x, y, svgX, svgY, width, height) {
     var xplus = width - x;
     var yplus = height - y;
     result = `${svgX - x},${svgY - y} ${svgX + xplus},${svgY - y} ${svgX + xplus},${svgY + yplus} ${svgX - x},${svgY + yplus}`;
@@ -691,14 +841,14 @@ function calCordinate (x , y , svgX , svgY , width , height ) {
 
 
 //  DRAG AND DROP DESK
-function dragStart () {
-    setTimeout(() => sample.className += ' invisable' , 0)
+function dragStart() {
+    setTimeout(() => sample.className += ' invisable', 0)
 }
 
 
-function svgover (e) {
+function svgover(e) {
     e.preventDefault();
-    
+
 }
 
 svg.ondragover = (e) => {
@@ -706,35 +856,35 @@ svg.ondragover = (e) => {
     svgY = e.clientY - rectTop;
 }
 
-function dragEndsvg (e) {
+function dragEndsvg(e) {
     console.log(rectangle_desk)
     // MAKE A DESK WHEN DRAG END
     if (rectangle_desk == true) {
-        small.style.visibility="";
-    sample.ondragend = function(e)  {
-        P = calCordinate(x , y , svgX , svgY , width , height);
-        objects.createPolygon(P , deskName , minValue , maxValue ,P , 0);
-        objects.polygon.forEach(el => {
-            if(el.point == P){
-                var element = document.getElementById(el.id);
+        small.style.visibility = "";
+        sample.ondragend = function (e) {
+            P = calCordinate(x, y, svgX, svgY, width, height);
+            objects.createPolygon(P, deskName, minValue, maxValue, P, 0);
+            objects.polygon.forEach(el => {
+                if (el.point == P) {
+                    var element = document.getElementById(el.id);
 
-                selectpolyid = el.id;
+                    selectpolyid = el.id;
 
-            }
-        });
-        
-    }
-    rectangle_desk = false;
+                }
+            });
+
+        }
+        rectangle_desk = false;
     }
 
     if (circle_chair == true) {
         // MAKE A CIRCLE CHAIR WHEN DRAG END
         chair_sample.ondragend = function (e) {
-            console.log(svgX , svgY);
-            objects.createCircle(svgX , svgY , 15 , "lightyellow");
+            console.log(svgX, svgY);
+            objects.createCircle(svgX, svgY, 15, "lightyellow");
 
         }
-        
+
 
     }
 }
@@ -742,33 +892,34 @@ function dragEndsvg (e) {
 
 
 // MULTIPLY MATRIX FUNCTION 
-function matrixMultiply (matrixA , matrixB) {
+function matrixMultiply(matrixA, matrixB) {
     var error = 0;
     var first = 0;
     var array = [];
-matrixA.forEach(el => {
-    if(el.length !== matrixA[0].length) {
-        error = 1;
-        
-    }}) ;
+    matrixA.forEach(el => {
+        if (el.length !== matrixA[0].length) {
+            error = 1;
+
+        }
+    });
 
     if (error !== 0) {
         return error;
-        
-    }else if (matrixA.length !== matrixB.length) {
+
+    } else if (matrixA.length !== matrixB.length) {
         error = 2;
         return error;
 
-    }else {
+    } else {
 
-    for (var i = 0; i < matrixA.length; i++) {
-        for (var j = 0; j < matrixB.length ; j++) {
-           first = first + matrixA[i][j] * matrixB[j];
-            
+        for (var i = 0; i < matrixA.length; i++) {
+            for (var j = 0; j < matrixB.length; j++) {
+                first = first + matrixA[i][j] * matrixB[j];
+
+            }
+            array.push(first);
+            first = 0;
         }
-        array.push(first);
-        first = 0;
-    }
         return array;
 
     }
@@ -778,18 +929,19 @@ matrixA.forEach(el => {
 window.onbeforeunload = () => {
     sessionStorage.removeItem('objects');
     if (reset == false) {
-    sessionStorage.setItem('objects' , JSON.stringify(objects));
+        sessionStorage.setItem('objects', JSON.stringify(objects));
     }
-    
+
 }
 
 var checkbtn = document.getElementById('check_objects');
 checkbtn.onclick = () => {
     console.log(objects);
+    console.log(condition)
 };
 
 total = 0;
-function test () {
+function test() {
     total += 1;
 }
 test()
@@ -797,7 +949,7 @@ console.log(total);
 
 
 
- 
+
 
 
 
