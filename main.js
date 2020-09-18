@@ -1,6 +1,8 @@
 
 var oldobjects = null;
 oldobjects = JSON.parse(sessionStorage.getItem('objects'));
+var condition = null;
+oldcondition = JSON.parse(sessionStorage.getItem('condition'));
 
 
 
@@ -92,31 +94,40 @@ function lineEdite (e) {
     ifWork = false;
     svg.addEventListener('mousemove' , svgLineEdit);
     svgLineDragPermission = true;
-    console.log('click');
-    console.log(x1);
-    console.log(x2);
     var lineEdite = document.getElementById(lineEditeId);
     var drag = true;
     function svgLineEdit (e)  {
-        console.log(x1);
         if (drag) {
             if (x1) {
-                console.log('here')
             newx = e.clientX - rectLeft;
             newy = e.clientY - rectTop;
             lineEdite.setAttribute('x1' ,newx );
             lineEdite.setAttribute('y1' ,newy );
             condition[Icondition].splice(0, 1 , newx);
             condition[Icondition].splice(1 , 1 , newy);
+
+            objects.line.forEach(el => {
+                if (el.id == lineEditeId) {
+                    el.x1 = newx;
+                    el.y1 = newy;
+                }
+            });
+
             }
             if (x2) {
-                console.log('here at x2')
                 newx = e.clientX - rectLeft;
                 newy = e.clientY - rectTop;
                 lineEdite.setAttribute('x2' ,newx );
                 lineEdite.setAttribute('y2' ,newy );
                 condition[Icondition].splice(2 , 1 , newx);
                 condition[Icondition].splice(3 , 1 , newy);
+
+                objects.line.forEach(el => {
+                    if (el.id == lineEditeId) {
+                        el.x2 = newx;
+                        el.y2 = newy;
+                    }
+                });
             }
         }
 
@@ -125,7 +136,6 @@ function lineEdite (e) {
     }
 
     svg.onmouseup = (e) => {
-        console.log('hellloo')
         drag = false;
         x1 = false;     
         x2 = false;
@@ -147,8 +157,7 @@ svg.onmousemove = (e) => {
     
     if (ifWork) {
         for (i = 0; i<condition.length; i++) {
-            // console.log(svgX , condition[0][0])
-            // console.log(svgY , condition[0][1])
+
             if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 5) {
                 
                 Icondition = i;
@@ -156,7 +165,6 @@ svg.onmousemove = (e) => {
                 x1 = true;
                 x2 =false;
                 svg.addEventListener('mousedown' , lineEdite);
-                console.log('got you1 for'+i);
                 svg.style.cursor = 'grab';
                 break
                     
@@ -168,7 +176,6 @@ svg.onmousemove = (e) => {
                 x2 = true;
                 lineEditeId = condition[i][4];
                 svg.addEventListener('mousedown' , lineEdite);
-                console.log('got you2 for' +i);
                 break
     
     
@@ -178,7 +185,6 @@ svg.onmousemove = (e) => {
                 x2 = false;
             }
             if (x1 == false && x2 == false) {
-                console.log('else')
                 lineEditeId = 0;
                 svg.style.cursor = '';
                 x1 = false;
@@ -190,11 +196,6 @@ svg.onmousemove = (e) => {
         
     }
     
-        // if (((svgX -244) + 20)*((svgX -244) + 20) + (svgY - 133)*(svgY - 133) < 20) {
-        //     console.log('got you')
-    
-    
-        // }
     
 }
 
@@ -346,7 +347,6 @@ class Objects {
 function Delete() {
     objects.polygon.forEach(el => {
         if (el.id == selectpolyid) {
-            console.log(objects.polygon.indexOf(el))
             objects.polygon.splice(objects.polygon.indexOf(el), 1);
         }
     });
@@ -528,7 +528,6 @@ function getinfofcirclechair(e) {
     var chair_pos = chair_sample.getBoundingClientRect();
     x = e.clientX - chair_pos.left;
     y = e.clientY - chair_pos.top;
-    console.log(x, y)
 
 }
 
@@ -549,10 +548,14 @@ function create(ev) {
 
 // OBJECT THAT HOLD ARRAY OF OBJECTS AND METHOD FOR CREATING THEM
 objects = new Objects();
-
+if (oldcondition) {
+    condition = oldcondition;
+}
 
 //  SET THE INFORMATION OF OBJECT(OLDOBJECT) BEFORE LOADING IN TO THE OBJECT
 if (oldobjects) {
+    oldobjects = JSON.parse(sessionStorage.getItem('objects'));
+    
     // CREATE SVG ELEMENT THAT EXIST BEFOR RELOADING THE PAGE
     oldobjects.polygon.forEach(el => {
         objects.createPolygon(el.point, el.name, el.min, el.max, el.baserotate, el.rotate);
@@ -738,7 +741,7 @@ function drag(evt) {
         };
         if (lineEditeId == 0) {
             lineBuild.setAttribute("x2", newx);
-        lineBuild.setAttribute("y2", newy);
+            lineBuild.setAttribute("y2", newy);
         }
     }
 
@@ -758,8 +761,6 @@ function endDrag(evt) {
     selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
     selectElement = null;
-    // var lineBuildid = lineBuild.getAttribute('id');
-    // console.log(lineBuildid);
     if (lineBuild) {
         objects.line.forEach(el => {
             if (el.id == lineBuild.getAttribute('id')) {
@@ -772,13 +773,14 @@ function endDrag(evt) {
     if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
         if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
             objects.line.pop();
-            if (lineEditeId = 0 ) {
+            if (lineEditeId == 0 ) {
                 lineBuild.remove();
             }
             objects.lineid = objects.lineid - 1;
         }else {
-            var idofline = lineBuild.getAttribute('id');
+            
             if (lineEditeId == 0) {
+                var idofline = lineBuild.getAttribute('id');
                 condition.push([x , y , newx ,newy ,idofline])
             }
         }
@@ -857,7 +859,6 @@ svg.ondragover = (e) => {
 }
 
 function dragEndsvg(e) {
-    console.log(rectangle_desk)
     // MAKE A DESK WHEN DRAG END
     if (rectangle_desk == true) {
         small.style.visibility = "";
@@ -880,7 +881,6 @@ function dragEndsvg(e) {
     if (circle_chair == true) {
         // MAKE A CIRCLE CHAIR WHEN DRAG END
         chair_sample.ondragend = function (e) {
-            console.log(svgX, svgY);
             objects.createCircle(svgX, svgY, 15, "lightyellow");
 
         }
@@ -928,8 +928,10 @@ function matrixMultiply(matrixA, matrixB) {
 
 window.onbeforeunload = () => {
     sessionStorage.removeItem('objects');
+    sessionStorage.removeItem('condition');
     if (reset == false) {
         sessionStorage.setItem('objects', JSON.stringify(objects));
+        sessionStorage.setItem('condition' , JSON.stringify(condition));
     }
 
 }
@@ -940,12 +942,7 @@ checkbtn.onclick = () => {
     console.log(condition)
 };
 
-total = 0;
-function test() {
-    total += 1;
-}
-test()
-console.log(total);
+
 
 
 
