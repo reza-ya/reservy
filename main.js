@@ -159,7 +159,7 @@ svg.onmousemove = (e) => {
     if (ifWork) {
         for (i = 0; i<condition.length; i++) {
 
-            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 5) {
+            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 10) {
                 
                 Icondition = i;
                 lineEditeId = condition[i][4];
@@ -170,7 +170,7 @@ svg.onmousemove = (e) => {
                 break
                     
                 
-            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 5) {
+            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 10) {
                 svg.style.cursor = 'grab';
                 Icondition = i;
                 x1 = false;
