@@ -6,6 +6,7 @@ oldcondition = JSON.parse(sessionStorage.getItem('condition'));
 
 
 
+
 // GET ELEMENT OF BUTTON AND INPUT
 var svg = document.getElementById('vector');
 var rect = svg.getBoundingClientRect();
@@ -105,13 +106,13 @@ function lineEdite (e) {
             lineEdite.setAttribute('y1' ,newy );
             condition[Icondition].splice(0, 1 , newx);
             condition[Icondition].splice(1 , 1 , newy);
-
             objects.line.forEach(el => {
                 if (el.id == lineEditeId) {
                     el.x1 = newx;
                     el.y1 = newy;
                 }
             });
+            
 
             }
             if (x2) {
@@ -562,6 +563,7 @@ if (oldobjects) {
 
     })
     // objects.createLine (5 , 5 ,100 ,100)
+    
     oldobjects.line.forEach(el => {
         objects.createLine(el.x1, el.y1, el.x2, el.y2);
     })
@@ -571,6 +573,10 @@ if (oldobjects) {
     })
 
 }
+
+// oldobjects.line.forEach(el => {
+//     objects.createLine(el.x1, el.y1, el.x2, el.y2);
+// })
 
 
 
@@ -597,151 +603,155 @@ function forEdit() {
 //  THIS FUNCTIONS ATTACH TO THE MOUSEDOWN , MOUSEMOVE,MOUSEUP AND MOUSELEAVE EVENT 
 function startDrag(evt) {
     // DRAG POLYGON DESK !!!
-    if (evt.buttons == 1 && evt.target.classList[0] == ".draggable") {
-        selectElement = evt.target;
-        x = evt.clientX - rectLeft;
-        y = evt.clientY - rectTop;
-        oldPoint = selectElement.getAttribute("points");
-        // DRAG CIRCLE CHAIR !!!
-    } else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
-        circ = true;
-        // CREATE LINE AS A WALL !!!
-    } else if (evt.buttons == 1 && lin == true) {
-        Drag = true;
-        x = Math.round(evt.clientX - rectLeft);
-        y = Math.round(evt.clientY - rectTop);
-        switch (x % 7) {
-            case 1:
-                x = x - 1;
-                break;
-            case 2:
-                x = x - 2;
-                break
-            case 3:
-                x = x - 3;
-                break;
-            case 4:
-                x = x + 3;
-                break;
-            case 5:
-                x = x + 2;
-                break;
-            case 6:
-                x = x + 1;
-                break;
+    if (lineEditeId == 0) {
+        if (evt.buttons == 1 && evt.target.classList[0] == ".draggable") {
+            selectElement = evt.target;
+            x = evt.clientX - rectLeft;
+            y = evt.clientY - rectTop;
+            oldPoint = selectElement.getAttribute("points");
+            // DRAG CIRCLE CHAIR !!!
+        } else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
+            circ = true;
+            // CREATE LINE AS A WALL !!!
+        } else if (evt.buttons == 1 && lin == true) {
+            Drag = true;
+            x = Math.round(evt.clientX - rectLeft);
+            y = Math.round(evt.clientY - rectTop);
+            switch (x % 7) {
+                case 1:
+                    x = x - 1;
+                    break;
+                case 2:
+                    x = x - 2;
+                    break
+                case 3:
+                    x = x - 3;
+                    break;
+                case 4:
+                    x = x + 3;
+                    break;
+                case 5:
+                    x = x + 2;
+                    break;
+                case 6:
+                    x = x + 1;
+                    break;
+            }
+            switch (y % 7) {
+                case 1:
+                    y = y - 1;
+                    break;
+                case 2:
+                    y = y - 2;
+                    break
+                case 3:
+                    y = y - 3;
+                    break;
+                case 4:
+                    y = y + 3;
+                    break;
+                case 5:
+                    y = y + 2;
+                    break;
+                case 6:
+                    y = y + 1;
+                    break;
+            };
+          
+                objects.createLine(x, y, x, y);
+          
+            newx = x;
+            newy = y;
+    
         }
-        switch (y % 7) {
-            case 1:
-                y = y - 1;
-                break;
-            case 2:
-                y = y - 2;
-                break
-            case 3:
-                y = y - 3;
-                break;
-            case 4:
-                y = y + 3;
-                break;
-            case 5:
-                y = y + 2;
-                break;
-            case 6:
-                y = y + 1;
-                break;
-        };
-        if (lineEditeId == 0) {
-            objects.createLine(x, y, x, y);
-        }
-        newx = x;
-        newy = y;
-
     }
 }
 
 
 // DRAG ITSELF
 function drag(evt) {
-    if (selectElement) {
-        selectElement.style.cursor = "grabbing";
-        newx = evt.clientX - rectLeft;
-        newy = evt.clientY - rectTop;
-        addx = newx - x;
-        addy = newy - y;
-        objects.polygon.forEach(el => {
-            if (el.id == selectElement.getAttribute('id')) {
-                el.baserotate;
-                calbase = addPiont(el.baserotate, addx, addy);
-                cal = true;
+    if (lineEditeId == 0 ) {
+        if (selectElement) {
+            selectElement.style.cursor = "grabbing";
+            newx = evt.clientX - rectLeft;
+            newy = evt.clientY - rectTop;
+            addx = newx - x;
+            addy = newy - y;
+            objects.polygon.forEach(el => {
+                if (el.id == selectElement.getAttribute('id')) {
+                    el.baserotate;
+                    calbase = addPiont(el.baserotate, addx, addy);
+                    cal = true;
+                }
+            });
+    
+            newPoint = addPiont(oldPoint, addx, addy);
+            selectElement.setAttribute("points", newPoint);
+            objects.polygon.forEach(el => {
+                if (el.id == selectElement.getAttribute('id')) {
+                    el.point = newPoint;
+                }
+            });
+        } else if (circ == true) {
+            newx = evt.clientX - rectLeft;
+            newy = evt.clientY - rectTop;
+            evt.target.setAttribute("cx", newx);
+            evt.target.setAttribute("cy", newy);
+            objects.circle.forEach(el => {
+                if (el.id == evt.target.getAttribute('id')) {
+                    el.cx = newx;
+                    el.cy = newy;
+                }
+            });
+        } else if (Drag == true) {
+            lineBuild = document.getElementById("line" + objects.lineid);
+            newx = Math.floor(evt.clientX - rectLeft);
+            newy = Math.floor(evt.clientY - rectTop);
+    
+            switch (newx % 7) {
+                case 1:
+                    newx = newx - 1;
+                    break;
+                case 2:
+                    newx = newx - 2;
+                    break
+                case 3:
+                    newx = newx - 3;
+                    break;
+                case 4:
+                    newx = newx + 3;
+                    break;
+                case 5:
+                    newx = newx + 2;
+                    break;
+                case 6:
+                    newx = newx + 1;
+                    break;
             }
-        });
-
-        newPoint = addPiont(oldPoint, addx, addy);
-        selectElement.setAttribute("points", newPoint);
-        objects.polygon.forEach(el => {
-            if (el.id == selectElement.getAttribute('id')) {
-                el.point = newPoint;
+            switch (newy % 7) {
+                case 1:
+                    newy = newy - 1;
+                    break;
+                case 2:
+                    newy = newy - 2;
+                    break
+                case 3:
+                    newy = newy - 3;
+                    break;
+                case 4:
+                    newy = newy + 3;
+                    break;
+                case 5:
+                    newy = newy + 2;
+                    break;
+                case 6:
+                    newy = newy + 1;
+                    break;
+            };
+            if (lineEditeId == 0) {
+                lineBuild.setAttribute("x2", newx);
+                lineBuild.setAttribute("y2", newy);
             }
-        });
-    } else if (circ == true) {
-        newx = evt.clientX - rectLeft;
-        newy = evt.clientY - rectTop;
-        evt.target.setAttribute("cx", newx);
-        evt.target.setAttribute("cy", newy);
-        objects.circle.forEach(el => {
-            if (el.id == evt.target.getAttribute('id')) {
-                el.cx = newx;
-                el.cy = newy;
-            }
-        });
-    } else if (Drag == true) {
-        lineBuild = document.getElementById("line" + objects.lineid);
-        newx = Math.floor(evt.clientX - rectLeft);
-        newy = Math.floor(evt.clientY - rectTop);
-
-        switch (newx % 7) {
-            case 1:
-                newx = newx - 1;
-                break;
-            case 2:
-                newx = newx - 2;
-                break
-            case 3:
-                newx = newx - 3;
-                break;
-            case 4:
-                newx = newx + 3;
-                break;
-            case 5:
-                newx = newx + 2;
-                break;
-            case 6:
-                newx = newx + 1;
-                break;
-        }
-        switch (newy % 7) {
-            case 1:
-                newy = newy - 1;
-                break;
-            case 2:
-                newy = newy - 2;
-                break
-            case 3:
-                newy = newy - 3;
-                break;
-            case 4:
-                newy = newy + 3;
-                break;
-            case 5:
-                newy = newy + 2;
-                break;
-            case 6:
-                newy = newy + 1;
-                break;
-        };
-        if (lineEditeId == 0) {
-            lineBuild.setAttribute("x2", newx);
-            lineBuild.setAttribute("y2", newy);
         }
     }
 
@@ -749,53 +759,56 @@ function drag(evt) {
 
 // DRAG END
 function endDrag(evt) {
-    if (cal == true) {
-        objects.polygon.forEach(el => {
-            if (el.id == selectElement.getAttribute('id')) {
-                el.baserotate;
-                el.baserotate = calbase;
-            }
-        });
-        cal = false;
-    }
-    selectElement ? selectElement.style.cursor = "grab" :
-        oldPoint = null;
-    selectElement = null;
-    if (lineBuild) {
-        objects.line.forEach(el => {
-            if (el.id == lineBuild.getAttribute('id')) {
-                el.x2 = newx;
-                el.y2 = newy;
-            }
-        });
-    }
-    lineBuild = document.getElementById("line" + objects.lineid);
-    if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
-        if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
-            objects.line.pop();
-            if (lineEditeId == 0 ) {
-                lineBuild.remove();
-            }
-            objects.lineid = objects.lineid - 1;
-        }else {
-            
-            if (lineEditeId == 0) {
-                var idofline = lineBuild.getAttribute('id');
-                condition.push([x , y , newx ,newy ,idofline])
+    if (lineEditeId == 0) {
+        if (cal == true) {
+            objects.polygon.forEach(el => {
+                if (el.id == selectElement.getAttribute('id')) {
+                    el.baserotate;
+                    el.baserotate = calbase;
+                }
+            });
+            cal = false;
+        }
+        selectElement ? selectElement.style.cursor = "grab" :
+            oldPoint = null;
+        selectElement = null;
+        if (lineBuild) {
+            objects.line.forEach(el => {
+                if (el.id == lineBuild.getAttribute('id')) {
+                    el.x2 = newx;
+                    el.y2 = newy;
+                }
+            });
+        }
+        lineBuild = document.getElementById("line" + objects.lineid);
+        if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
+            if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
+                objects.line.pop();
+                if (lineEditeId == 0 ) {
+                    lineBuild.remove();
+                }
+                objects.lineid = objects.lineid - 1;
+            }else {
+                
+                if (lineEditeId == 0) {
+                    var idofline = lineBuild.getAttribute('id');
+                    condition.push([x , y , newx ,newy ,idofline])
+                }
             }
         }
+        x = 0;
+        y = 0;
+        newx = 0;
+        newy = 0;
+        lineBuild = false;
+        circ = false;
+        Drag = false;
     }
-    x = 0;
-    y = 0;
-    newx = 0;
-    newy = 0;
-    lineBuild = false;
-    circ = false;
-    Drag = false;
 }
 
 function endDrag2(evt) {
-    selectElement ? selectElement.style.cursor = "grab" :
+    if (lineEditeId == 0) {
+        selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
     selectElement = null;
     circ = false;
@@ -803,6 +816,7 @@ function endDrag2(evt) {
     lin = false;
     btnLine.style.transform = "scale(1)";
     btnLine.style.backgroundColor = "";
+    }
 }
 // SVG DRAG FUNCTIONALLITY END
 
