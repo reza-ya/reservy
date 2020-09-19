@@ -86,7 +86,11 @@ var lineEditeId = 0;
 var Icondition;
 var svgLineDragPermission = false;
 var ifWork = true;
-
+var lineBildy = false;
+var lineselected;
+var selectLineId;
+var oldselectpolyid = null;
+var oldselectLineId = null;
 
 
 
@@ -216,15 +220,27 @@ Resetbtn.onclick = () => {
 
 // CHECK WHICH ELEMENT SELECTED AND CHANGE STYLE
 function checkSelectItem() {
-    if (selectpolyid) {
-        if (deskselected) {
-            deskselected.style.fill = "";
-            deskselected.style.filter = "";
-        }
-        deskselected = document.getElementById(selectpolyid);
-        deskselected.style.fill = "#6e2503";
-        deskselected.style.filter = "url(#f1)";
-    }
+    // if (selectpolyid) {
+    //     if (deskselected) {
+    //         deskselected.style.fill = "";
+    //         deskselected.style.filter = "";
+    //     }
+    //     deskselected = document.getElementById(selectpolyid);
+    //     deskselected.style.fill = "#6e2503";
+    //     deskselected.style.filter = "url(#f1)";
+    // }
+
+    // if (selectLineId) {
+    //     if (lineselected) {
+    //         lineselected.style.filter = "";
+    //         lineselected.style.stroke = "black";
+    //     }
+    //     lineselected = document.getElementById(selectLineId);
+    //     lineselected.style.filter = "url(#f2)";
+    //     lineselected.style.stroke = 'green '
+    // }
+
+    
 }
 setInterval(checkSelectItem, 10);
 
@@ -250,7 +266,7 @@ class Objects {
         polygon.setAttribute("stroke-width", 8);
         polygon.setAttribute("id", "poly" + this.polyid);
         polygon.classList = ".draggable";
-        polygon.addEventListener('click', forEdit)
+        polygon.addEventListener('click', forEdit);
 
         this.polygon.push({
             id: "poly" + this.polyid,
@@ -296,6 +312,8 @@ class Objects {
         line.setAttribute("x2", x2);
         line.setAttribute("y2", y2);
         line.setAttribute("style", "stroke:rgb(0,0,0);stroke-width:4");
+        line.addEventListener('click' , lineForEdit);
+        line.style.cursor = "pointer";
         this.line.push({
             id: "line" + this.lineid,
             x1: x1,
@@ -346,13 +364,28 @@ class Objects {
 
 
 function Delete() {
-    objects.polygon.forEach(el => {
-        if (el.id == selectpolyid) {
-            objects.polygon.splice(objects.polygon.indexOf(el), 1);
-        }
-    });
-    selectpolyid = null;
-    deskselected.remove();
+    if (selectpolyid) {
+        selectLineId = null;
+        objects.polygon.forEach(el => {
+            if (el.id == selectpolyid) {
+                objects.polygon.splice(objects.polygon.indexOf(el), 1);
+            }
+        });
+        selectpolyid = null;
+        deskselected.remove();
+    }
+
+
+    if (selectLineId) {
+        selectpolyid = null;
+        objects.line.forEach(el => {
+            if (el.id == selectLineId) {
+                objects.line.splice(objects.polygon.indexOf(el), 1);
+            }
+        });
+        selectLineId = null;
+        lineselected.remove();
+    }
 }
 
 // GET CORDINATE OF OFFSET FORM TOP AND LEFT (USE FOR UPDATE CORDINATE WHEN USER SCROLL IN THE SITE )
@@ -589,9 +622,70 @@ svg.addEventListener('mouseleave', endDrag2);
 
 
 
-function forEdit() {
-    selectpolyid = this.getAttribute('id');
-    rotateCriteria = this.getAttribute('points');
+function forEdit(thispermission = true , oldselectpolyid) {
+    if (selectLineId) {
+        lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+    }
+
+    if (oldselectpolyid) {
+    deskselected = document.getElementById(oldselectpolyid);
+    deskselected.style.fill = "";
+    deskselected.style.filter = "";
+    }
+
+    if (selectpolyid) {
+    deskselected = document.getElementById(selectpolyid);
+    deskselected.style.fill = "";
+    deskselected.style.filter = "";
+
+    }
+
+
+    if (thispermission ) {
+        selectpolyid = this.getAttribute('id') ;
+        rotateCriteria = this.getAttribute('points');
+    }
+    deskselected = document.getElementById(selectpolyid);
+    deskselected.style.fill = "#6e2503";
+    deskselected.style.filter = "url(#f1)";
+}
+
+
+function lineForEdit (thispermission = true , permissionforpolydefault = true) {
+
+    if (permissionforpolydefault) {
+        if (selectpolyid) {
+            deskselected = document.getElementById(selectpolyid);
+            deskselected.style.fill = "";
+            deskselected.style.filter = "";
+        
+            }
+    }
+
+    if (oldselectLineId) {
+        lineselected = document.getElementById(oldselectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+    }
+    if(selectLineId) {
+        lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+
+    }
+
+    if (thispermission) {
+        selectLineId = this.getAttribute('id') ;
+    }
+    lineselected = document.getElementById(selectLineId);
+    if (lineselected) {
+        lineselected.style.filter = "url(#f2)";
+        lineselected.style.stroke = 'green ';
+    }
+    console.log('hoooy')
+    
 }
 
 
@@ -705,6 +799,7 @@ function drag(evt) {
             });
         } else if (Drag == true) {
             lineBuild = document.getElementById("line" + objects.lineid);
+            lineBildy =true;
             newx = Math.floor(evt.clientX - rectLeft);
             newy = Math.floor(evt.clientY - rectTop);
     
@@ -772,7 +867,7 @@ function endDrag(evt) {
         selectElement ? selectElement.style.cursor = "grab" :
             oldPoint = null;
         selectElement = null;
-        if (lineBuild) {
+        if (lineBuild && lineBildy == true) {
             objects.line.forEach(el => {
                 if (el.id == lineBuild.getAttribute('id')) {
                     el.x2 = newx;
@@ -781,18 +876,20 @@ function endDrag(evt) {
             });
         }
         lineBuild = document.getElementById("line" + objects.lineid);
-        if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
-            if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
-                objects.line.pop();
-                if (lineEditeId == 0 ) {
-                    lineBuild.remove();
-                }
-                objects.lineid = objects.lineid - 1;
-            }else {
-                
-                if (lineEditeId == 0) {
-                    var idofline = lineBuild.getAttribute('id');
-                    condition.push([x , y , newx ,newy ,idofline])
+        if (lineBildy) {
+            if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
+                if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
+                    objects.line.pop();
+                    if (lineEditeId == 0 ) {
+                        lineBuild.remove();
+                    }
+                    objects.lineid = objects.lineid - 1;
+                }else {
+                    
+                    if (lineEditeId == 0) {
+                        var idofline = lineBuild.getAttribute('id');
+                        condition.push([x , y , newx ,newy ,idofline])
+                    }
                 }
             }
         }
@@ -803,6 +900,7 @@ function endDrag(evt) {
         lineBuild = false;
         circ = false;
         Drag = false;
+        lineBildy = false;
     }
 }
 
@@ -882,8 +980,14 @@ function dragEndsvg(e) {
             objects.polygon.forEach(el => {
                 if (el.point == P) {
                     var element = document.getElementById(el.id);
-
+                    if (selectpolyid) {
+                        console.log('heeeee')
+                        oldselectpolyid = selectpolyid;
+                    }
                     selectpolyid = el.id;
+                    console.log(selectpolyid);
+                    forEdit(false , oldselectpolyid);
+                    lineForEdit(false , false);
 
                 }
             });
@@ -953,7 +1057,9 @@ window.onbeforeunload = () => {
 var checkbtn = document.getElementById('check_objects');
 checkbtn.onclick = () => {
     console.log(objects);
-    console.log(condition)
+    console.log(condition);
+    console.log(selectpolyid)
+
 };
 
 

@@ -70,6 +70,11 @@
                                       <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
                                       <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
                                     </filter>
+                                    <filter id="f2" x="0" y="0" width="200%" height="200%">
+                                      <feOffset result="offOut" in="SourceAlpha" dx="10" dy="10" />
+                                      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
+                                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                                    </filter>
                                   </defs>
                             </svg>
                             
