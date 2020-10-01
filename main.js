@@ -7,6 +7,8 @@ oldcondition = JSON.parse(sessionStorage.getItem('condition'));
 
 
 
+
+
 // GET ELEMENT OF BUTTON AND INPUT
 var svg = document.getElementById('vector');
 var rect = svg.getBoundingClientRect();
@@ -26,6 +28,7 @@ var heightplusbtn = document.getElementById('height_plus');
 var heightminusbtn = document.getElementById('height_minus');
 var deskNameInput = document.getElementById('name_desk');
 var chair_sample = document.getElementById('circle_chair');
+var btnNewDesign = document.getElementById('newDesign');
 
 
 
@@ -46,6 +49,7 @@ widthminusbtn.addEventListener('click', widthminus);
 heightplusbtn.addEventListener('click', heightplus);
 heightminusbtn.addEventListener('click', heightminus);
 chair_sample.addEventListener('mousedown', getinfofcirclechair);
+btnNewDesign.addEventListener('click' , newDesign);
 
 
 
@@ -91,7 +95,33 @@ var lineselected;
 var selectLineId;
 var oldselectpolyid = null;
 var oldselectLineId = null;
+var newDesign;
+var selectCircleId = null;
+var circleSelect = null;
+var newDesign = false;
 
+
+
+function newDesign (e) {
+    var floorCounter = Number(sessionStorage.getItem('floorCounter'));
+    console.log(floorCounter)
+    if (floorCounter ==0) {
+        console.log("if")
+        sessionStorage.setItem("floorCounter" , "1" );
+        sessionStorage.setItem('floor_1' , JSON.stringify(objects));
+    }else {
+        floorCounter += 1;
+        console.log('else');
+        sessionStorage.setItem("floorCounter" , JSON.stringify(floorCounter));
+        sessionStorage.setItem("floor".concat(floorCounter.toString()) , JSON.stringify(objects));
+        console.log(floorCounter);
+    }
+    // sessionStorage.setItem('floor'+floorCounter , JSON.stringify(objects));
+    // floorCounter += 1;
+    // sessionStorage.setItem('floorCounter' , floorCounter);
+    newDesign = true;
+    window.location.reload();
+}
 
 
 function lineEdite (e) {
@@ -162,8 +192,8 @@ svg.onmousemove = (e) => {
     
     if (ifWork) {
         for (i = 0; i<condition.length; i++) {
-
-            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 10) {
+            var m = Math.abs(condition[i][3] - condition[i][1])/Math.abs(condition[i][2] - condition[i][0]);
+            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 20) {
                 
                 Icondition = i;
                 lineEditeId = condition[i][4];
@@ -174,7 +204,7 @@ svg.onmousemove = (e) => {
                 break
                     
                 
-            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 10) {
+            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 20) {
                 svg.style.cursor = 'grab';
                 Icondition = i;
                 x1 = false;
@@ -216,34 +246,6 @@ Resetbtn.onclick = () => {
     reset = true;
     window.location.reload();
 }
-
-
-// CHECK WHICH ELEMENT SELECTED AND CHANGE STYLE
-function checkSelectItem() {
-    // if (selectpolyid) {
-    //     if (deskselected) {
-    //         deskselected.style.fill = "";
-    //         deskselected.style.filter = "";
-    //     }
-    //     deskselected = document.getElementById(selectpolyid);
-    //     deskselected.style.fill = "#6e2503";
-    //     deskselected.style.filter = "url(#f1)";
-    // }
-
-    // if (selectLineId) {
-    //     if (lineselected) {
-    //         lineselected.style.filter = "";
-    //         lineselected.style.stroke = "black";
-    //     }
-    //     lineselected = document.getElementById(selectLineId);
-    //     lineselected.style.filter = "url(#f2)";
-    //     lineselected.style.stroke = 'green '
-    // }
-
-    
-}
-setInterval(checkSelectItem, 10);
-
 
 
 // CLASS OF OBJECT WITH METHOD FOR CREATE OBJECT
@@ -293,6 +295,7 @@ class Objects {
         circle.setAttribute("stroke", "black");
         circle.setAttribute("stroke-width", 1);
         circle.setAttribute("fill", fill);
+        circle.addEventListener("click" , circleforEdit);
         this.circle.push({
             id: "circle" + this.circleid,
             cx: cx,
@@ -311,9 +314,10 @@ class Objects {
         line.setAttribute("y1", y1);
         line.setAttribute("x2", x2);
         line.setAttribute("y2", y2);
-        line.setAttribute("style", "stroke:rgb(0,0,0);stroke-width:4");
+        line.setAttribute("stroke", "black");
+        line.setAttribute("stroke-width", "5");
         line.addEventListener('click' , lineForEdit);
-        line.style.cursor = "pointer";
+        // line.style.cursor = "pointer";
         this.line.push({
             id: "line" + this.lineid,
             x1: x1,
@@ -383,8 +387,18 @@ function Delete() {
                 objects.line.splice(objects.polygon.indexOf(el), 1);
             }
         });
+        condition.forEach(el => {
+            if (el[4] == selectLineId) {
+                condition.splice(condition.indexOf(el) , 1)
+            }
+        })
         selectLineId = null;
         lineselected.remove();
+    }
+
+    if (selectCircleId) {
+        var circleSelect = document.getElementById(selectCircleId);
+        circleSelect.remove();
     }
 }
 
@@ -607,21 +621,16 @@ if (oldobjects) {
 
 }
 
-// oldobjects.line.forEach(el => {
-//     objects.createLine(el.x1, el.y1, el.x2, el.y2);
-// })
-
-
-
-
-
 svg.addEventListener('mousedown', startDrag);
 svg.addEventListener('mousemove', drag);
 svg.addEventListener('mouseup', endDrag);
 svg.addEventListener('mouseleave', endDrag2);
 
+// forEdit(false , oldselectpolyid);
+// lineForEdit(false , false);
 
 
+// FOR DELETING DESK
 function forEdit(thispermission = true , oldselectpolyid) {
     if (selectLineId) {
         lineselected = document.getElementById(selectLineId);
@@ -650,9 +659,10 @@ function forEdit(thispermission = true , oldselectpolyid) {
     deskselected = document.getElementById(selectpolyid);
     deskselected.style.fill = "#6e2503";
     deskselected.style.filter = "url(#f1)";
+    selectLineId = null;
 }
 
-
+// FOR DELETING WALL 
 function lineForEdit (thispermission = true , permissionforpolydefault = true) {
 
     if (permissionforpolydefault) {
@@ -679,17 +689,21 @@ function lineForEdit (thispermission = true , permissionforpolydefault = true) {
     if (thispermission) {
         selectLineId = this.getAttribute('id') ;
     }
-    lineselected = document.getElementById(selectLineId);
+    if (permissionforpolydefault ) {
+
+        lineselected = document.getElementById(selectLineId);
     if (lineselected) {
-        lineselected.style.filter = "url(#f2)";
         lineselected.style.stroke = 'green ';
     }
-    console.log('hoooy')
+    selectpolyid = null;
+    }
     
 }
 
+function circleforEdit (thispermission = true , permissionforpolydefault = true , permissionforlinedefault = true) {
+    
 
-
+}
 
 
 // SVG DRAG FUNCTIONALLITY
@@ -914,6 +928,7 @@ function endDrag2(evt) {
     lin = false;
     btnLine.style.transform = "scale(1)";
     btnLine.style.backgroundColor = "";
+    btnLine.style.boxShadow = "";
     }
 }
 // SVG DRAG FUNCTIONALLITY END
@@ -981,11 +996,9 @@ function dragEndsvg(e) {
                 if (el.point == P) {
                     var element = document.getElementById(el.id);
                     if (selectpolyid) {
-                        console.log('heeeee')
                         oldselectpolyid = selectpolyid;
                     }
                     selectpolyid = el.id;
-                    console.log(selectpolyid);
                     forEdit(false , oldselectpolyid);
                     lineForEdit(false , false);
 
@@ -1047,9 +1060,14 @@ function matrixMultiply(matrixA, matrixB) {
 window.onbeforeunload = () => {
     sessionStorage.removeItem('objects');
     sessionStorage.removeItem('condition');
+    if (newDesign == false ) {
     if (reset == false) {
         sessionStorage.setItem('objects', JSON.stringify(objects));
         sessionStorage.setItem('condition' , JSON.stringify(condition));
+    }
+    if (reset) {
+        sessionStorage.clear();
+    }
     }
 
 }
@@ -1058,11 +1076,42 @@ var checkbtn = document.getElementById('check_objects');
 checkbtn.onclick = () => {
     console.log(objects);
     console.log(condition);
-    console.log(selectpolyid)
+    console.log(sessionStorage);
+    condition.forEach (el => {
+         var check = lineexplore(el);
+        console.log(check);
+    })
 
 };
 
+function lineexplore (condition) {
+    var x1;
+    var y1;
+    var x2;
+    var y2;
+    if (condition [0] < condition [3]) {
+        x1 = condition [0];
+        y1 = -condition [1];
+        x2 = condition [2];
+        y2 = -condition [3];
+    }else {
+        x1 = condition [2];
+        y1 = -condition [3];
+        x2 = condition [0];
+        y2 = -condition [1];
 
+    }
+
+    var slope = (y2 - y1) / (x2 - x1);
+    return slope;
+
+
+}
+
+
+test = [217, 35, 525, 196, "line1"];
+
+lineexplore (test)
 
 
 

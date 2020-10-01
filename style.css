@@ -6,11 +6,6 @@
     text-align: right;
 }
 
-/* .test {
-    width: 200px;
-    height: 200px;
-    background-color: blue;
-} */
 
 body {
    background-color: rgb(255, 255, 255);
@@ -20,9 +15,11 @@ body {
     margin-top: 100px;
 }
 
+
 h4 {
     margin: 20px auto;
 }
+
 
 
 form {
@@ -141,17 +138,6 @@ polygon {
 .line_button {
     width: 100px;
     height: 40px;
-    /* all: unset;
-    opacity: 0.9;
-    background-color:rgb(41, 27, 27);
-    color: white;
-    width: 100px;
-    height: 40px;
-    text-align: center;
-    border: solid 1px black;
-    border-radius: 10px;
-    margin: 10px;
-    font-size: 1.5rem; */
     
 }
 
@@ -168,24 +154,24 @@ polygon {
    height: 450px;
 }
 
+.roundBottom {
+    background-color: rgb(80, 184, 80);
+    border-top-left-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .wrap_rot {
     display: flex;
     flex-direction: column;
     background-color: rgb(80, 184, 80);
-    border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     align-items: center;
 }
 
 
-input {
-    /* width: 100px;
-    height: 30px;
-    margin-right: 5px;
-    border-radius: 5px;
-    padding: 10px; */
-}
 
 
 label {
@@ -193,17 +179,6 @@ label {
 }
 
 
-#create_desk {
-    /* all: unset;
-    text-align:center;
-    width: 60px;
-    height: 35px;
-    background-color:rgb(41, 27, 27);
-    opacity: 0.9;
-    color: white;
-    border-radius: 5px;
-    font-size: 1.3rem; */
-}
 
 
 #create_desk:hover {
@@ -275,30 +250,19 @@ label {
     background-color: rgb(74, 126, 126);
 }
 
+
+.wrap_rotup {
+    display: flex;
+    background-color: rgb(80, 184, 80);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    align-items: center;
+}
+
 #reset_btn {
 
 }
 
-@media(max-width: 1200px) {
-    #vector {
-        width: 400px;
-        height: 400px;
-    }
-}
-
-@media(max-width: 1200px) {
-    #vector {
-        width: 400px;
-        height: 400px;
-    }
-}
-
-@media(max-width: 1200px) {
-    #vector {
-        width: 400px;
-        height: 400px;
-    }
-}
 
 
 #Delete {
@@ -308,3 +272,4 @@ label {
     justify-content: center;
     align-items: center;    
 }
+
