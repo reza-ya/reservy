@@ -102,6 +102,7 @@ var newDesign = false;
 
 
 
+// FUNCTION FOR SAVE PREVIOUS DEDIGN AND CLEAN PAGE
 function newDesign (e) {
     var floorCounter = Number(sessionStorage.getItem('floorCounter'));
     console.log(floorCounter)
@@ -124,6 +125,8 @@ function newDesign (e) {
 }
 
 
+
+
 function lineEdite (e) {
     svg.style.cursor = 'grabing';
     ifWork = false;
@@ -134,8 +137,51 @@ function lineEdite (e) {
     function svgLineEdit (e)  {
         if (drag) {
             if (x1) {
-            newx = e.clientX - rectLeft;
-            newy = e.clientY - rectTop;
+            // newx = e.clientX - rectLeft;
+            // newy = e.clientY - rectTop;
+            newx = Math.round(e.clientX - rectLeft);
+            newy = Math.round(e.clientY - rectTop);
+            switch (newx % 7) {
+                case 1:
+                    newx = newx - 1;
+                    break;
+                case 2:
+                    newx = newx - 2;
+                    break
+                case 3:
+                    newx = newx - 3;
+                    break;
+                case 4:
+                    newx = newx + 3;
+                    break;
+                case 5:
+                    newx = newx + 2;
+                    break;
+                case 6:
+                    newx = newx + 1;
+                    break;
+            }
+            switch (newy % 7) {
+                case 1:
+                    newy = newy - 1;
+                    break;
+                case 2:
+                    newy = newy - 2;
+                    break
+                case 3:
+                    newy = newy - 3;
+                    break;
+                case 4:
+                    newy = newy + 3;
+                    break;
+                case 5:
+                    newy = newy + 2;
+                    break;
+                case 6:
+                    newy = newy + 1;
+                    break;
+            };
+            
             lineEdite.setAttribute('x1' ,newx );
             lineEdite.setAttribute('y1' ,newy );
             condition[Icondition].splice(0, 1 , newx);
@@ -150,8 +196,50 @@ function lineEdite (e) {
 
             }
             if (x2) {
-                newx = e.clientX - rectLeft;
-                newy = e.clientY - rectTop;
+                // newx = e.clientX - rectLeft;
+                // newy = e.clientY - rectTop;
+                newx = Math.round(e.clientX - rectLeft);
+                newy = Math.round(e.clientY - rectTop);
+            switch (newx % 7) {
+                case 1:
+                    newx = newx - 1;
+                    break;
+                case 2:
+                    newx = newx - 2;
+                    break
+                case 3:
+                    newx = newx - 3;
+                    break;
+                case 4:
+                    newx = newx + 3;
+                    break;
+                case 5:
+                    newx = newx + 2;
+                    break;
+                case 6:
+                    newx = newx + 1;
+                    break;
+            }
+            switch (newy % 7) {
+                case 1:
+                    newy = newy - 1;
+                    break;
+                case 2:
+                    newy = newy - 2;
+                    break
+                case 3:
+                    newy = newy - 3;
+                    break;
+                case 4:
+                    newy = newy + 3;
+                    break;
+                case 5:
+                    newy = newy + 2;
+                    break;
+                case 6:
+                    newy = newy + 1;
+                    break;
+            };
                 lineEdite.setAttribute('x2' ,newx );
                 lineEdite.setAttribute('y2' ,newy );
                 condition[Icondition].splice(2 , 1 , newx);
@@ -368,6 +456,8 @@ class Objects {
 
 
 function Delete() {
+
+    // DELETE POLYGON
     if (selectpolyid) {
         selectLineId = null;
         objects.polygon.forEach(el => {
@@ -380,11 +470,13 @@ function Delete() {
     }
 
 
+    // DELETE LINE
     if (selectLineId) {
         selectpolyid = null;
         objects.line.forEach(el => {
             if (el.id == selectLineId) {
-                objects.line.splice(objects.polygon.indexOf(el), 1);
+                console.log(objects.line.indexOf(el))
+                objects.line.splice(objects.line.indexOf(el), 1);
             }
         });
         condition.forEach(el => {
@@ -396,8 +488,15 @@ function Delete() {
         lineselected.remove();
     }
 
+
+    // DELETE CIRCLE
     if (selectCircleId) {
-        var circleSelect = document.getElementById(selectCircleId);
+        circleSelect = document.getElementById(selectCircleId);
+        objects.circle.forEach(el => {
+            if (el.id == selectCircleId) {
+                objects.circle.splice(objects.circle.indexOf(el), 1);
+            }
+        });
         circleSelect.remove();
     }
 }
@@ -656,10 +755,25 @@ function forEdit(thispermission = true , oldselectpolyid) {
         selectpolyid = this.getAttribute('id') ;
         rotateCriteria = this.getAttribute('points');
     }
+
+
+    if(selectCircleId) {
+        circleSelect = document.getElementById(selectCircleId);
+        try {
+            circleSelect.style.fill = 'white'
+        }
+        catch {
+
+        }
+    }
+
+
+
     deskselected = document.getElementById(selectpolyid);
     deskselected.style.fill = "#6e2503";
     deskselected.style.filter = "url(#f1)";
     selectLineId = null;
+    selectCircleId = null;
 }
 
 // FOR DELETING WALL 
@@ -674,11 +788,8 @@ function lineForEdit (thispermission = true , permissionforpolydefault = true) {
             }
     }
 
-    if (oldselectLineId) {
-        lineselected = document.getElementById(oldselectLineId);
-        lineselected.style.filter = "";
-        lineselected.style.stroke = "black";
-    }
+  
+
     if(selectLineId) {
         lineselected = document.getElementById(selectLineId);
         lineselected.style.filter = "";
@@ -695,13 +806,63 @@ function lineForEdit (thispermission = true , permissionforpolydefault = true) {
     if (lineselected) {
         lineselected.style.stroke = 'green ';
     }
+
+    if(selectCircleId) {
+        circleSelect = document.getElementById(selectCircleId);
+        try {
+            circleSelect.style.fill = 'white'
+        }
+        catch {
+
+        }
+    }
+
+    selectCircleId = null;
     selectpolyid = null;
     }
     
 }
 
-function circleforEdit (thispermission = true , permissionforpolydefault = true , permissionforlinedefault = true) {
+function circleforEdit (e ,thispermission = true , permissionforpolydefault = true , permissionforlinedefault = true) {
+
     
+    if (permissionforpolydefault) {
+        if (selectpolyid) {
+            deskselected = document.getElementById(selectpolyid);
+            deskselected.style.fill = "";
+            deskselected.style.filter = "";
+        
+            }
+    }
+
+    if (permissionforlinedefault) {
+        if (selectLineId) {
+            lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+        
+            }
+    }
+    
+    if(selectCircleId) {
+        circleSelect = document.getElementById(selectCircleId);
+        try {
+            circleSelect.style.fill = 'white';
+          }
+          catch(err) {
+            
+          }
+    }
+
+    
+    if (thispermission) {
+        selectCircleId = this.getAttribute('id');
+        circleSelect = document.getElementById(selectCircleId);
+        circleSelect.style.fill = 'green';
+    }
+
+    selectLineId = null;
+    selectpolyid = null;
 
 }
 
@@ -1077,41 +1238,11 @@ checkbtn.onclick = () => {
     console.log(objects);
     console.log(condition);
     console.log(sessionStorage);
-    condition.forEach (el => {
-         var check = lineexplore(el);
-        console.log(check);
-    })
+    
 
 };
 
-function lineexplore (condition) {
-    var x1;
-    var y1;
-    var x2;
-    var y2;
-    if (condition [0] < condition [3]) {
-        x1 = condition [0];
-        y1 = -condition [1];
-        x2 = condition [2];
-        y2 = -condition [3];
-    }else {
-        x1 = condition [2];
-        y1 = -condition [3];
-        x2 = condition [0];
-        y2 = -condition [1];
 
-    }
-
-    var slope = (y2 - y1) / (x2 - x1);
-    return slope;
-
-
-}
-
-
-test = [217, 35, 525, 196, "line1"];
-
-lineexplore (test)
 
 
 
