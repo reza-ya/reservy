@@ -18,7 +18,7 @@ var deskSubmit = document.getElementById('create_desk');
 var sample = document.getElementById('sample_desk');
 var btnLine = document.getElementById('line_button');
 var btnUp = document.getElementById('btn_up');
-var btnDown = document.getElementById('btn_down');
+var btnDown = document.getElementById('btn_Down');
 var small = document.querySelector('.guid_drag');
 var Deletebtn = document.getElementById('Delete');
 var Resetbtn = document.getElementById('reset_btn');
@@ -29,7 +29,7 @@ var heightminusbtn = document.getElementById('height_minus');
 var deskNameInput = document.getElementById('name_desk');
 var chair_sample = document.getElementById('circle_chair');
 var btnNewDesign = document.getElementById('newDesign');
-
+var btnNewDesign = document.getElementById('newDesign');
 
 
 
@@ -43,6 +43,7 @@ sample.addEventListener('dragstart', dragStart);
 sample.addEventListener('mousedown', sampleGetinfo);
 btnLine.addEventListener('click', lineSet);
 btnUp.addEventListener('click', UP);
+btnDown.addEventListener('click' , Down)
 Deletebtn.addEventListener('click', Delete);
 widthplusbtn.addEventListener('click', widthplus);
 widthminusbtn.addEventListener('click', widthminus);
@@ -524,6 +525,25 @@ function UP() {
         if (el.id == selected.getAttribute('id')) {
             base = el.baserotate;
             el.rotate += 10;
+            rotate = el.rotate;
+        }
+    });
+    var newpoint = objects.rotatePolygon(base, rotate);
+    selected.setAttribute("points", newpoint);
+    objects.polygon.forEach(el => {
+        if (el.id == selected.getAttribute('id')) {
+            el.point = newpoint;
+        }
+    });
+}
+
+
+function Down () {
+    var selected = document.getElementById(selectpolyid);
+    objects.polygon.forEach(el => {
+        if (el.id == selected.getAttribute('id')) {
+            base = el.baserotate;
+            el.rotate -= 10;
             rotate = el.rotate;
         }
     });
