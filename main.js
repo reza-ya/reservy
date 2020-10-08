@@ -30,6 +30,9 @@ var deskNameInput = document.getElementById('name_desk');
 var chair_sample = document.getElementById('circle_chair');
 var btnNewDesign = document.getElementById('newDesign');
 var btnNewDesign = document.getElementById('newDesign');
+var floorText = document.querySelector('.floor_text');
+var chairbtnplus = document.getElementById('chair_plus');
+var chairbtnminus = document.getElementById('chair_minus');
 
 
 
@@ -51,6 +54,9 @@ heightplusbtn.addEventListener('click', heightplus);
 heightminusbtn.addEventListener('click', heightminus);
 chair_sample.addEventListener('mousedown', getinfofcirclechair);
 btnNewDesign.addEventListener('click' , newDesign);
+chairbtnplus.addEventListener('click' , chairplus);
+chairbtnminus.addEventListener('click' , chairminus);
+
 
 
 
@@ -108,7 +114,6 @@ function newDesign (e) {
     var floorCounter = Number(sessionStorage.getItem('floorCounter'));
     console.log(floorCounter)
     if (floorCounter ==0) {
-        console.log("if")
         sessionStorage.setItem("floorCounter" , "1" );
         sessionStorage.setItem('floor_1' , JSON.stringify(objects));
     }else {
@@ -655,6 +660,34 @@ function heightminus() {
 
 
 
+function chairplus () {
+    var circleSelectlocal = document.getElementById(selectCircleId);
+    let currentR = Number(circleSelectlocal.getAttribute('r'));
+    currentR += 2;
+    currentR.toString();
+    circleSelectlocal.setAttribute('r' , currentR);
+    objects.circle.forEach(el => {
+        if (el.id == selectCircleId) {
+           el.r = currentR;
+        }
+    });
+}
+
+function chairminus () {
+    var circleSelectlocal = document.getElementById(selectCircleId);
+    let currentR = Number(circleSelectlocal.getAttribute('r'));
+    currentR -= 2;
+    currentR.toString();
+    circleSelectlocal.setAttribute('r' , currentR);
+    objects.circle.forEach(el => {
+        if (el.id == selectCircleId) {
+           el.r = currentR;
+        }
+    });
+}
+
+
+
 // CHANGE WIDTH AND HEIGHT OF THE DESK THAT CALL ON THE FUNCTION ABOVE
 function setWidthHieght(point, addW, addH) {
     var splitBase;
@@ -700,13 +733,23 @@ function getinfofcirclechair(e) {
 
 // CREATE A HTML_CSS (RECTANGLE) DESK FOR DRAGING TO THE SVG
 function create(ev) {
+    let check = true;
+    objects.polygon.forEach(el => {
+        if (el.name == deskNameInput.value) {
+           check = false;
+        }
+    });
+
     if (max.value && min.value) {
+        if(check) {
         ev.preventDefault();
         sample.className = 'sample_desk';
         small.style.visibility = 'visible';
         maxValue = max.value;
         minValue = min.value;
         deskName = deskNameInput.value;
+        }
+    
     }
 
 }
@@ -1261,6 +1304,8 @@ checkbtn.onclick = () => {
     
 
 };
+
+
 
 
 

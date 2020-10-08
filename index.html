@@ -9,7 +9,7 @@
     <title>Document</title>
 </head>
 <body onresize="getcordinate()">
-<div class="container">
+<div class="contain">
 
         <div class="row align-items-center">
                 <div class="col-4 order-12">
@@ -41,6 +41,7 @@
                     <main id="main_1" >
                         <div class="round">
                             <div class="roundBottom">
+                                <div class="floor_text"></div>
                                 <button id="line_button" class="btn btn-warning" >دیوار</button>
                                 <button id="newDesign" class=" btn btn-primary" >جدید</button>
                                 <button id="reset_btn" class="btn btn-danger">Reset</button>
@@ -71,6 +72,11 @@
                                     <div class="rot chair_side">
                                         <div id="circle_chair" class="circle-chair" draggable="true"></div>
                                         <div style="font-size:13px; font-weight: bold;text-align: center;"> صندلی</div>
+                                    </div>
+                                    <div class="chair_size">
+                                        <button id="chair_plus" class="btn btn-primary height_desk">+</button>
+                                        <p class="chair_text_edite">طول</p>
+                                        <button id="chair_minus" class="btn btn-primary height_desk">-</button>
                                     </div>
                                 </div>
                                 <svg  id="vector" >
