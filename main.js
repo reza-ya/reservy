@@ -570,6 +570,11 @@ function Delete() {
         })
         selectLineId = null;
         lineselected.remove();
+        var checkLine_1 = document.getElementById('rect_1');
+        var checkLine_2 = document.getElementById('rect_2');
+        checkLine_1.remove();
+        checkLine_2.remove();
+        selectLineId = null;
     }
 
 
