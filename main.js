@@ -1250,17 +1250,12 @@ function endDrag(evt) {
                 }
             });
         }
-        console.log('1')
         lineBuild = document.getElementById("line" + objects.lineid);
         if (lineBildy) {
-            console.log('2')
             if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
-                console.log('3')
                 if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
-                    console.log('4')
                     objects.line.pop();
                     if (lineEditeId == 0 ) {
-                        console.log('here    ')
                         lineBuild.remove();
                     }
                     objects.lineid = objects.lineid - 1;
@@ -1289,6 +1284,7 @@ function endDrag2(evt) {
         selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
     selectElement = null;
+    console.log('here')
     circ = false;
     Drag = false;
     lin = false;

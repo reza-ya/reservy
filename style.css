@@ -168,7 +168,6 @@ polygon {
 
 #vector {
    width: 100%;
-   height: 40vw;
 }
 .round {
     width: 100%;
@@ -226,18 +225,31 @@ label {
 
 .setwidth {
     box-sizing: content-box;
-    text-align: center;
-    border:  rgb(35, 59, 59) 2px solid;
-    background-color: rgb(47,79,79);
-    border-radius: 10px;
-    width: 45px;
-    height: 100px;
+    height: 12%;
+}
+
+.chair_size  {
+    box-sizing: content-box;
+    height: 12%;
+}
+
+.desk_text_edite {
+    background-color: teal;
+    margin: 0px;
+}
+
+
+.chair_text_edite {
+    background-color: teal;
+    margin: 0px;
+    height: 30%;
+    padding-top: 5px;
 }
 
 .width_desk , .height_desk {
-    margin: auto;
-    width: 45px;
-    height: 30px;
+    box-sizing: border-box;
+    width: 40px;
+    height: 30%;
     background-color: rgb(90, 90, 209);
     display: flex;
     justify-content: center;
