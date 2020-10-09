@@ -40,6 +40,7 @@ var chairbtnminus = document.getElementById('chair_minus');
 // EVENT LISTENERS
 svg.addEventListener('dragenter', dragEndsvg);
 svg.addEventListener('dragover', svgover);
+svg.addEventListener('click' , svgDefault);
 deskSubmit.addEventListener('click', create);
 sample.addEventListener('dragstart', dragStart);
 // sample.addEventListener('dragstart' , drag)fsdfsdf
@@ -106,7 +107,73 @@ var newDesign;
 var selectCircleId = null;
 var circleSelect = null;
 var newDesign = false;
+var permissionforremove = true;
 
+
+// FOR MAKE HANDY IF NOTEXIST AND DELETE HANDY IF EXIST
+function handyHandler(lineId) {
+    var checkLine_1 = document.getElementById('rect_1');
+    var checkLine_2 = document.getElementById('rect_2');
+    if (checkLine_1 && checkLine_2) {
+
+        var locallineselect = document.getElementById(lineId)
+    let conditionLocal = [];
+            conditionLocal.push(locallineselect.getAttribute('x1'));
+            conditionLocal.push(locallineselect.getAttribute('y1'));
+            conditionLocal.push(locallineselect.getAttribute('x2'));
+            conditionLocal.push(locallineselect.getAttribute('y2'));
+            conditionLocal.push(locallineselect.id);
+
+            checkLine_1.setAttribute("x", conditionLocal[0] - 5);
+            checkLine_1.setAttribute("y", conditionLocal[1] - 5);
+            checkLine_1.setAttribute("width", '10');
+            checkLine_1.setAttribute("height", '10');
+            checkLine_1.setAttribute("stroke", "black");
+            checkLine_1.setAttribute("stroke-width", "1");
+            checkLine_1.setAttribute("style" , 'fill:none;stroke-width:1;stroke:rgb(0,0,0)');
+
+            checkLine_2.setAttribute("x", conditionLocal[2] - 5);
+            checkLine_2.setAttribute("y", conditionLocal[3] - 5);
+            checkLine_2.setAttribute("width", '10');
+            checkLine_2.setAttribute("height", '10');
+            checkLine_2.setAttribute("stroke", "black");
+            checkLine_2.setAttribute("stroke-width", "1");
+            checkLine_2.setAttribute("style" , 'fill:none;stroke-width:1;stroke:rgb(0,0,0)')
+
+
+
+    }else {
+    var locallineselect = document.getElementById(lineId)
+    let conditionLocal = [];
+            conditionLocal.push(locallineselect.getAttribute('x1'));
+            conditionLocal.push(locallineselect.getAttribute('y1'));
+            conditionLocal.push(locallineselect.getAttribute('x2'));
+            conditionLocal.push(locallineselect.getAttribute('y2'));
+            conditionLocal.push(locallineselect.id);
+
+            var rect_1 = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+            svg.appendChild(rect_1);
+            rect_1.setAttribute("id", "rect_1");
+            rect_1.setAttribute("x", conditionLocal[0] - 5);
+            rect_1.setAttribute("y", conditionLocal[1] - 5);
+            rect_1.setAttribute("width", '10');
+            rect_1.setAttribute("height", '10');
+            rect_1.setAttribute("stroke", "black");
+            rect_1.setAttribute("stroke-width", "1");
+            rect_1.setAttribute("style" , 'fill:none;stroke-width:1;stroke:rgb(0,0,0)')
+
+            var rect_2 = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+            svg.appendChild(rect_2);
+            rect_2.setAttribute("id", "rect_2");
+            rect_2.setAttribute("x", conditionLocal[2] - 5);
+            rect_2.setAttribute("y", conditionLocal[3] - 5);
+            rect_2.setAttribute("width", '10');
+            rect_2.setAttribute("height", '10');
+            rect_2.setAttribute("stroke", "black");
+            rect_2.setAttribute("stroke-width", "1");
+            rect_2.setAttribute("style" , 'fill:none;stroke-width:1;stroke:rgb(0,0,0)')
+    }
+}
 
 
 // FUNCTION FOR SAVE PREVIOUS DEDIGN AND CLEAN PAGE
@@ -143,6 +210,7 @@ function lineEdite (e) {
     function svgLineEdit (e)  {
         if (drag) {
             if (x1) {
+            var rect_1 = document.getElementById('rect_1');
             // newx = e.clientX - rectLeft;
             // newy = e.clientY - rectTop;
             newx = Math.round(e.clientX - rectLeft);
@@ -190,8 +258,8 @@ function lineEdite (e) {
             
             lineEdite.setAttribute('x1' ,newx );
             lineEdite.setAttribute('y1' ,newy );
-            condition[Icondition].splice(0, 1 , newx);
-            condition[Icondition].splice(1 , 1 , newy);
+            rect_1.setAttribute("x", newx - 5);
+            rect_1.setAttribute("y", newy - 5);
             objects.line.forEach(el => {
                 if (el.id == lineEditeId) {
                     el.x1 = newx;
@@ -202,8 +270,7 @@ function lineEdite (e) {
 
             }
             if (x2) {
-                // newx = e.clientX - rectLeft;
-                // newy = e.clientY - rectTop;
+                var rect_2 = document.getElementById('rect_2');
                 newx = Math.round(e.clientX - rectLeft);
                 newy = Math.round(e.clientY - rectTop);
             switch (newx % 7) {
@@ -248,8 +315,10 @@ function lineEdite (e) {
             };
                 lineEdite.setAttribute('x2' ,newx );
                 lineEdite.setAttribute('y2' ,newy );
-                condition[Icondition].splice(2 , 1 , newx);
-                condition[Icondition].splice(3 , 1 , newy);
+                rect_2.setAttribute("x", newx - 5);
+                rect_2.setAttribute("y", newy - 5);
+                // condition[Icondition].splice(2 , 1 , newx);
+                // condition[Icondition].splice(3 , 1 , newy);
 
                 objects.line.forEach(el => {
                     if (el.id == lineEditeId) {
@@ -285,30 +354,39 @@ svg.onmousemove = (e) => {
     svgY = e.clientY - rectTop;
     
     if (ifWork) {
-        for (i = 0; i<condition.length; i++) {
-            var m = Math.abs(condition[i][3] - condition[i][1])/Math.abs(condition[i][2] - condition[i][0]);
-            if (((svgX -condition[i][0]) )*((svgX -condition[i][0])) + (svgY - condition[i][1])*(svgY - condition[i][1]) < 20) {
-                
-                Icondition = i;
-                lineEditeId = condition[i][4];
+        if (selectLineId) {
+            var locallineselect = document.getElementById(selectLineId);
+            let conditionLocal = [];
+            conditionLocal.push(locallineselect.getAttribute('x1'));
+            conditionLocal.push(locallineselect.getAttribute('y1'));
+            conditionLocal.push(locallineselect.getAttribute('x2'));
+            conditionLocal.push(locallineselect.getAttribute('y2'));
+            conditionLocal.push(locallineselect.id);
+
+            // var m = Math.abs(condition[i][3] - condition[i][1])/Math.abs(condition[i][2] - condition[i][0]);
+            if (((svgX -conditionLocal[0]) )*((svgX -conditionLocal[0])) + (svgY - conditionLocal[1])*(svgY - conditionLocal[1]) < 20) {
+                permissionforremove = false;
+                // Icondition = i;
+                lineEditeId =conditionLocal[4];
                 x1 = true;
                 x2 =false;
                 svg.addEventListener('mousedown' , lineEdite);
                 svg.style.cursor = 'grab';
-                break
+                
                     
                 
-            }else if (((svgX -condition[i][2]) )*((svgX -condition[i][2]) ) + (svgY - condition[i][3])*(svgY - condition[i][3]) < 20) {
+            } else if (((svgX -conditionLocal[2]) )*((svgX -conditionLocal[2])) + (svgY - conditionLocal[3])*(svgY - conditionLocal[3]) < 20) {
+                permissionforremove = false;
                 svg.style.cursor = 'grab';
-                Icondition = i;
                 x1 = false;
                 x2 = true;
-                lineEditeId = condition[i][4];
+                lineEditeId =conditionLocal[4];
                 svg.addEventListener('mousedown' , lineEdite);
-                break
+                
     
     
-            }else {
+            } else {
+                permissionforremove = true;
                 svg.style.cursor = '';
                 x1 = false;
                 x2 = false;
@@ -791,6 +869,42 @@ svg.addEventListener('mouseleave', endDrag2);
 // forEdit(false , oldselectpolyid);
 // lineForEdit(false , false);
 
+// WHEN SELECT ON SVG UNSELECTED EVRY ELEMENT OF THE SVG
+function svgDefault (e) {
+    if (e.target.id == 'vector') {
+    if (selectpolyid) {
+        deskselected = document.getElementById(selectpolyid);
+        deskselected.style.fill = "";
+        deskselected.style.filter = "";
+        }
+
+    if (selectLineId) {
+        if (permissionforremove) {
+
+        lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+        var checkLine_1 = document.getElementById('rect_1');
+        var checkLine_2 = document.getElementById('rect_2');
+        checkLine_1.remove();
+        checkLine_2.remove();
+        selectLineId = null;
+        }
+    }
+
+    if(selectCircleId) {
+        circleSelect = document.getElementById(selectCircleId);
+        try {
+            circleSelect.style.fill = 'white'
+        }
+        catch {
+
+        }
+    }
+
+
+}
+}
 
 // FOR DELETING DESK
 function forEdit(thispermission = true , oldselectpolyid) {
@@ -798,6 +912,14 @@ function forEdit(thispermission = true , oldselectpolyid) {
         lineselected = document.getElementById(selectLineId);
         lineselected.style.filter = "";
         lineselected.style.stroke = "black";
+        lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+        var checkLine_1 = document.getElementById('rect_1');
+        var checkLine_2 = document.getElementById('rect_2');
+        checkLine_1.remove();
+        checkLine_2.remove();
+        selectLineId = null;
     }
 
     if (oldselectpolyid) {
@@ -868,6 +990,8 @@ function lineForEdit (thispermission = true , permissionforpolydefault = true) {
         lineselected = document.getElementById(selectLineId);
     if (lineselected) {
         lineselected.style.stroke = 'green ';
+        handyHandler(selectLineId);
+            
     }
 
     if(selectCircleId) {
@@ -903,6 +1027,14 @@ function circleforEdit (e ,thispermission = true , permissionforpolydefault = tr
             lineselected = document.getElementById(selectLineId);
         lineselected.style.filter = "";
         lineselected.style.stroke = "black";
+        lineselected = document.getElementById(selectLineId);
+        lineselected.style.filter = "";
+        lineselected.style.stroke = "black";
+        var checkLine_1 = document.getElementById('rect_1');
+        var checkLine_2 = document.getElementById('rect_2');
+        checkLine_1.remove();
+        checkLine_2.remove();
+        selectLineId = null;
         
             }
     }
@@ -991,7 +1123,7 @@ function startDrag(evt) {
             };
           
                 objects.createLine(x, y, x, y);
-          
+                lineBildy =true;
             newx = x;
             newy = y;
     
@@ -1113,12 +1245,17 @@ function endDrag(evt) {
                 }
             });
         }
+        console.log('1')
         lineBuild = document.getElementById("line" + objects.lineid);
         if (lineBildy) {
+            console.log('2')
             if (x !== 0 && y !== 0 && newx !== 0 && newy !== 0 ) {
+                console.log('3')
                 if (Math.abs(x-newx) <10 && Math.abs(y - newy)<10) {
+                    console.log('4')
                     objects.line.pop();
                     if (lineEditeId == 0 ) {
+                        console.log('here    ')
                         lineBuild.remove();
                     }
                     objects.lineid = objects.lineid - 1;
