@@ -108,6 +108,7 @@ var selectCircleId = null;
 var circleSelect = null;
 var newDesign = false;
 var permissionforremove = true;
+var circleChoose;
 
 
 // FOR MAKE HANDY IF NOTEXIST AND DELETE HANDY IF EXIST
@@ -179,16 +180,13 @@ function handyHandler(lineId) {
 // FUNCTION FOR SAVE PREVIOUS DEDIGN AND CLEAN PAGE
 function newDesign (e) {
     var floorCounter = Number(sessionStorage.getItem('floorCounter'));
-    console.log(floorCounter)
     if (floorCounter ==0) {
         sessionStorage.setItem("floorCounter" , "1" );
         sessionStorage.setItem('floor_1' , JSON.stringify(objects));
     }else {
         floorCounter += 1;
-        console.log('else');
         sessionStorage.setItem("floorCounter" , JSON.stringify(floorCounter));
         sessionStorage.setItem("floor".concat(floorCounter.toString()) , JSON.stringify(objects));
-        console.log(floorCounter);
     }
     // sessionStorage.setItem('floor'+floorCounter , JSON.stringify(objects));
     // floorCounter += 1;
@@ -559,7 +557,6 @@ function Delete() {
         selectpolyid = null;
         objects.line.forEach(el => {
             if (el.id == selectLineId) {
-                console.log(objects.line.indexOf(el))
                 objects.line.splice(objects.line.indexOf(el), 1);
             }
         });
@@ -1081,6 +1078,7 @@ function startDrag(evt) {
             // DRAG CIRCLE CHAIR !!!
         } else if (evt.buttons == 1 && evt.target.classList[0] == ".circle_draggable") {
             circ = true;
+            circleChoose = document.getElementById(evt.target.id)
             // CREATE LINE AS A WALL !!!
         } else if (evt.buttons == 1 && lin == true) {
             Drag = true;
@@ -1164,8 +1162,8 @@ function drag(evt) {
         } else if (circ == true) {
             newx = evt.clientX - rectLeft;
             newy = evt.clientY - rectTop;
-            evt.target.setAttribute("cx", newx);
-            evt.target.setAttribute("cy", newy);
+            circleChoose.setAttribute("cx", newx);
+            circleChoose.setAttribute("cy", newy);
             objects.circle.forEach(el => {
                 if (el.id == evt.target.getAttribute('id')) {
                     el.cx = newx;
@@ -1284,7 +1282,6 @@ function endDrag2(evt) {
         selectElement ? selectElement.style.cursor = "grab" :
         oldPoint = null;
     selectElement = null;
-    console.log('here')
     circ = false;
     Drag = false;
     lin = false;
