@@ -6,6 +6,16 @@
     text-align: right;
 }
 
+#column_svg {
+    height: 90%;
+    width: 90%;
+}
+
+.align-items-center {
+    width: 95vw;
+    height: 90vh;
+}
+
 html {
     margin: 0px;
 }
@@ -57,6 +67,8 @@ h3 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -171,7 +183,7 @@ polygon {
 }
 .round {
     width: 100%;
-    /* height: 100%; */
+    height: 100%;
 }
 
 .roundBottom {
@@ -263,6 +275,8 @@ label {
 
 .svg2 {
     display: flex;
+    width: 100%;
+    height: 100%;
 }
 
 #btn_up , #btn_Down {
