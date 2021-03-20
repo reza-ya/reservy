@@ -323,3 +323,20 @@ label {
     align-items: center;    
 }
 
+
+.hint {
+    position: relative;
+    left: -10px;
+    padding: 8px;
+    width: 61%;
+    text-align: center;
+    height: 50px;
+    background-color: purple;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 5px balck;
+    color: white;
+}
+
+.row {
+    margin: -30px;
+}
