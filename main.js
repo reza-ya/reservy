@@ -34,6 +34,13 @@ var floorText = document.querySelector('.floor_text');
 var chairbtnplus = document.getElementById('chair_plus');
 var chairbtnminus = document.getElementById('chair_minus');
 
+var hint = document.querySelector('.hint');
+var chairHint = document.querySelector('.chair_side');
+var chairSize = document.querySelector('.chair_size');
+var arz = document.querySelector('.arz');
+var tul = document.querySelector('.tul');
+var rotateClock = document.getElementById('btn_up');
+var rotateClockWise = document.getElementById('btn_Down');
 
 
 
@@ -46,20 +53,42 @@ sample.addEventListener('dragstart', dragStart);
 // sample.addEventListener('dragstart' , drag)fsdfsdf
 sample.addEventListener('mousedown', sampleGetinfo);
 btnLine.addEventListener('click', lineSet);
+btnLine.addEventListener('mouseover', overWall);
+btnLine.addEventListener('mouseout', outWall);
 btnUp.addEventListener('click', UP);
 btnDown.addEventListener('click' , Down)
 Deletebtn.addEventListener('click', Delete);
+Deletebtn.addEventListener('mouseout', outDelete);
+Deletebtn.addEventListener('mouseover', overDelete);
 widthplusbtn.addEventListener('click', widthplus);
 widthminusbtn.addEventListener('click', widthminus);
 heightplusbtn.addEventListener('click', heightplus);
 heightminusbtn.addEventListener('click', heightminus);
 chair_sample.addEventListener('mousedown', getinfofcirclechair);
-btnNewDesign.addEventListener('click' , newDesign);
+// btnNewDesign.addEventListener('click' , newDesign);
 chairbtnplus.addEventListener('click' , chairplus);
 chairbtnminus.addEventListener('click' , chairminus);
 
+Resetbtn.addEventListener('mouseover' , overReset);
+Resetbtn.addEventListener('mouseout' , outReset);
 
+chairHint.addEventListener('mouseover' , overChair);
+chairHint.addEventListener('mouseout' , outChair);
 
+chairSize.addEventListener('mouseover' , overChairSize);
+chairSize.addEventListener('mouseout' , outChairSize);
+
+arz.addEventListener('mouseover' , overArz);
+arz.addEventListener('mouseout' , outArz);
+
+tul.addEventListener('mouseover' , overTul);
+tul.addEventListener('mouseout' , outTul);
+
+rotateClock.addEventListener('mouseover' , overRotateClock);
+rotateClock.addEventListener('mouseout' , outRotateClock);
+
+rotateClockWise.addEventListener('mouseover', overRotateClockWise);
+rotateClockWise.addEventListener('mouseout', outRotateClockWise);
 
 
 // GLOBAL VARIABLE
@@ -109,6 +138,92 @@ var circleSelect = null;
 var newDesign = false;
 var permissionforremove = true;
 var circleChoose;
+
+
+
+
+function overDelete () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'آیتم انتحاب شده را حذف کنید';
+}
+
+function outDelete () {
+    hint.style.opacity = '0';
+}
+
+
+function overWall () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'ابزار دیوار را فعال کرده و داخل صفحه موس را بکشید';
+}
+
+function outWall () {
+    hint.style.opacity = '0';
+}
+
+function overReset () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'محتویات صفحه را پاک کنید';
+}
+
+function outReset () {
+    hint.style.opacity = '0';
+}
+
+function overChair () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'صندلی را با موس به داخل صفحه بکشید';
+}
+
+function outChair () {
+    hint.style.opacity = '0';
+}
+
+function overChairSize () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'اندازه صندلی انتحاب شده را تغییر دهید';
+}
+
+function outChairSize () {
+    hint.style.opacity = '0';
+}
+
+function overArz () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'عرض صندلی انتحاب شده را تغییر دهید';
+}
+
+function outArz () {
+    hint.style.opacity = '0';
+}
+
+function overTul () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'طول صندلی انتحاب شده را تغییر دهید';
+}
+
+function outTul () {
+    hint.style.opacity = '0';
+}
+
+function overRotateClock () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'صندلی انتحاب شده را بچرخانید';
+}
+
+function outRotateClock () {
+    hint.style.opacity = '0';
+}
+
+function overRotateClockWise () {
+    hint.style.opacity = '1';
+    hint.innerHTML = 'صندلی انتحاب شده را بچرخانید';
+}
+
+function outRotateClockWise () {
+    hint.style.opacity = '0';
+}
+
 
 
 // FOR MAKE HANDY IF NOTEXIST AND DELETE HANDY IF EXIST
